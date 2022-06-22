@@ -10,6 +10,9 @@ class GameModel {
     startGame() {
         this.playerCharacter = new PlayerCharacter(width/2, height/2);
         this.gameActive = true;
+
+        this.entityManager.addEnemy(new Enemy(1, 20, [20, 500], [375, 375], 5, 0, 0, 0));
+
     }
 
     playerFire(direction) {
@@ -28,6 +31,7 @@ class GameModel {
         deltaTime = (nowTime - this.prevTime) / 1000.0;
         this.prevTime = nowTime;
 
+        // update entities
         this.entityManager.update(deltaTime);
     }
 }
@@ -45,9 +49,17 @@ class EntityManager {
         this.projectiles.push(projectile);
     }
 
+    addEnemy(enemy) {
+        this.enemies.push(enemy);
+    }
+
     update(deltaTime) {
         for (const projectile of this.projectiles) {
             projectile.update(deltaTime);
+        }
+
+        for (const enemy of this.enemies) {
+            enemy.update(deltaTime);
         }
     }
 }

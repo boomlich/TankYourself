@@ -11,4 +11,8 @@ class Projectile {
         this.position[0] += this.direction[0] * this.force * deltaTime;
         this.position[1] += this.direction[1] * this.force * deltaTime;
     }
+
+    hasCollision() {
+        
+    }
 }

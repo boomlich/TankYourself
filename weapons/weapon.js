@@ -1,6 +1,5 @@
 class Weapon {
 
-
     constructor(playerPos, cooldown) {
         this.playerPos = [playerPos[0], playerPos[1]];
         this.cooldown = cooldown;
@@ -12,7 +11,7 @@ class Weapon {
         let d = new Date()
         let nowTime = d.getTime();
 
-        console.log((nowTime - this.prevFireTime));
+        // console.log((nowTime - this.prevFireTime));
         
         if (nowTime - this.prevFireTime > this.cooldown) {
             this.prevFireTime = nowTime;

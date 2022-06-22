@@ -14,6 +14,7 @@ function draw() {
     gameModel.update();
     drawPlayer();
     drawProjectiles();
+    drawEnemies();
     
     drawingContext.shadowBlur = 32;
 
@@ -43,6 +44,16 @@ function drawProjectiles() {
     for (const projectile of projectiles) {
         // console.log("Projectile drawn: " + projectile.position + " :: " +  projectile.size);
         ellipse(projectile.position[0], projectile.position[1], projectile.size);
+    }
+}
+
+function drawEnemies() {
+
+    let enemies = gameModel.entityManager.enemies;
+
+    fill(245, 0, 120)
+    for (const enemy of enemies) {
+        ellipse(enemy.position[0], enemy.position[1], enemy.size);
     }
 }
 
