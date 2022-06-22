@@ -21,7 +21,7 @@ class Weapon {
     }
 
     fire(direction) {
-        let projectile = new Projectile(this.playerPos, direction, 100, 20);
+        let projectile = new Projectile(this.playerPos, direction, 100, 20, 1);
         gameModel.addProjectile(projectile);
     }
 }

@@ -6,22 +6,31 @@ class Enemy {
 
     constructor(health, size, position, target, speed, score, loot, lootchance) {
         this.health = health;
-        this.speed = 0.5;
+        this.speed = 1;
         this.position = [position[0], position[1]];
         this.target = [target[0], target[1]];
         this.score = score;
         this.loot = loot;
         this.lootchance = lootchance;
         this.size = size;
+        this.collision = new Collision(this.position, size, size);
     }
 
     death() {
-
+        gameModel.entityManager.removeEnemy();
     }
 
     applyForce(force) {
         this.velocity[0] += force[0];
         this.velocity[1] += force[1];
+    }
+
+    applyDamage(damage) {
+        this.health -= damage;
+
+        if (this.health < 1) {
+            this.death();
+        }
     }
 
     update(deltaTime) {
@@ -36,8 +45,6 @@ class Enemy {
             this.acceleration[0] = direction[0] * this.maxAcceleration;
             this.acceleration[1] = direction[1] * this.maxAcceleration; 
         }
-
-        console.log(this.acceleration);
 
         this.velocity[0] += this.acceleration[0];
         this.velocity[1] += this.acceleration[1];

@@ -23,6 +23,10 @@ class GameModel {
         this.entityManager.addProjectile(projectile)
     }
 
+    gameOver() {
+        console.log("GAME OVER");
+    }
+
 
     update() {
         // Calculate time between frames
@@ -33,6 +37,7 @@ class GameModel {
 
         // update entities
         this.entityManager.update(deltaTime);
+        this.playerCharacter.update(deltaTime);
     }
 }
 
@@ -51,6 +56,16 @@ class EntityManager {
 
     addEnemy(enemy) {
         this.enemies.push(enemy);
+    }
+
+    removeEnemy(enemy) {
+        let index = this.enemies.indexOf(enemy);
+        this.enemies.splice(index, 1);
+    }
+
+    removeProjectile(projectile) {
+        let index = this.projectiles.indexOf(projectile);
+        this.projectiles.splice(index, 1);
     }
 
     update(deltaTime) {
