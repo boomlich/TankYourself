@@ -1,9 +1,9 @@
 class PlayerCharacter {
 
-    constructor(x, y) {
+    constructor(position) {
         this.size = 30;
-        this.position = [x - this.size / 2, y - this.size / 2];
-        this.weapon = new Weapon([x, y], 1000);
+        this.position = [position[0] - this.size / 2, position[1] - this.size / 2];
+        this.weapon = new Weapon([position[0], position[1]], 1000);
         this.collision = new Collision(this.position, this.size, this.size);
     }
 

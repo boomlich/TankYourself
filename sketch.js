@@ -3,10 +3,9 @@ let edge;
 const uiContainer = document.getElementById("uiContainer");
 
 function setup() {
-    createCanvas(750, 750);
+    createCanvas(500, 500);
     gameModel = new GameModel(width, height);
-    edge = new Edge(width, height, 10);
-    
+    edge = gameModel.edge;
 }
   
 function draw() {
@@ -18,6 +17,9 @@ function draw() {
     drawPlayer();
     drawProjectiles();
     drawEnemies();
+    drawEnemySeed();
+
+    
     
     drawingContext.shadowBlur = 32;
 
@@ -25,8 +27,8 @@ function draw() {
 
     mouseDir = [mouseX - width/2, mouseY - width/2]
     mouseDirUnit = unitVector(mouseDir);
-    text(mouseDir[0] + " . " + mouseDir[1], 10, 30);
-    text(mouseDirUnit[0] + " . " + mouseDirUnit[1], 10, 100);
+    // text(mouseDir[0] + " . " + mouseDir[1], 10, 30);
+    // text(mouseDirUnit[0] + " . " + mouseDirUnit[1], 10, 100);
 }
 
 
@@ -45,7 +47,6 @@ function drawProjectiles() {
     let projectiles = gameModel.entityManager.projectiles;
 
     for (const projectile of projectiles) {
-        // console.log("Projectile drawn: " + projectile.position + " :: " +  projectile.size);
         ellipse(projectile.position[0], projectile.position[1], projectile.size);
     }
 }
@@ -61,21 +62,25 @@ function drawEnemies() {
 }
 
 function drawEdges() {
-    fill(color(0, 0, 0, 0));
-    stroke('red');
-    strokeWeight(4);
-    rect(edge.minX, edge.minY, edge.maxX, edge.maxY);
-    
-    // drawStroke(edge.minX, edge.minY, edge.maxX, edge.minY, 255);
-    // drawStroke(edge.maxX, edge.minY, edge.maxX, edge.maxY, 255);
-    // drawStroke(edge.maxX, edge.maxY, edge.minX, edge.maxY, 255);
-    // drawStroke(edge.minX, edge.maxY, edge.minX, edge.minY, 255);
+    for (const lin of edge.lines) {
+        line(lin[0], lin[1], lin[2], lin[3]);
+    }
+    stroke(255);
 }
 
 function drawStroke(x1, y1, x2, y2, color) {
     fill(245, 0, 120)
     line(x1, y1, x2, y2);
-    stroke(color);
+    // stroke(color);
+}
+
+function drawEnemySeed() {
+    let enemySeeds = gameModel.entityManager.enemySeeds;
+
+    for (const seed of enemySeeds) {
+        ellipse(seed.position[0], seed.position[1], 10);
+    }
+    
 }
 
 function mousePressed(event) {

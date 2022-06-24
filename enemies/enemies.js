@@ -17,7 +17,7 @@ class Enemy {
     }
 
     death() {
-        gameModel.entityManager.removeEnemy();
+        gameModel.removeEnemy();
     }
 
     applyForce(force) {
@@ -35,22 +35,11 @@ class Enemy {
 
     update(deltaTime) {
 
-        // Break if going faster then the speed limit
-        // if (vectorLength(this.velocity) > this.speed) {
-        //     let unitVelocity = unitVector(this.velocity);
-        //     this.acceleration[0] += unitVelocity[0] * -1 * this.maxAcceleration;
-        //     this.acceleration[1] += unitVelocity[1] * -1 * this.maxAcceleration;
-        // } else {
-        //     let direction = unitVector(pointsToVector(this.position, this.target));
-        //     this.acceleration[0] += direction[0] * this.maxAcceleration;
-        //     this.acceleration[1] += direction[1] * this.maxAcceleration; 
-        // }
-
         let direction = unitVector(pointsToVector(this.position, this.target));
         this.acceleration[0] += direction[0] * this.maxAcceleration;
         this.acceleration[1] += direction[1] * this.maxAcceleration; 
 
-        console.log(this.acceleration);
+        // console.log(this.acceleration);
 
         this.velocity[0] += this.acceleration[0];
         this.velocity[1] += this.acceleration[1];
@@ -65,4 +54,46 @@ class Enemy {
         this.position[1] += this.velocity[1];
         
     }
+}
+
+class EnemyBasic extends Enemy {
+    constructor(position) {
+        super(1, 25, position, gameModel.playerPosition, 1, 0, 0, 0);
+    }
+}
+
+class EnemySeed {
+
+    constructor(progression, duration) {
+        this.progression = progression;
+        this.duration = duration;
+        // this.enemy = enemy;
+        this.position = gameModel.edge.progressToPoint(progression);
+        this.right = false;
+        this.progressionPerTimeUnit = 50 / duration; 
+        console.log("seed created");
+    }
+
+    update(deltaTime) {
+        this.duration -= deltaTime;
+        if (this.duration <= 0) {
+            this.spawnEnemy();
+        }
+        if (this.right) {
+            this.progression = mod(this.progression + this.progressionPerTimeUnit * deltaTime, 100);
+        } else {
+            this.progression = mod(this.progression - this.progressionPerTimeUnit * deltaTime, 100);
+        }
+        console.log(this.progression);
+        this.position = gameModel.edge.progressToPoint(this.progression);
+    }
+
+    spawnEnemy() {
+        // gameModel.addEnemy(this.enemy);
+        console.log("enemy spawned");
+        gameModel.removeEnemySeed(this);
+        console.log(gameModel.playerPosition);
+        gameModel.addEnemy(new EnemyBasic(this.position));
+    }
+
 }

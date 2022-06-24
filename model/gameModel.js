@@ -1,17 +1,21 @@
 class GameModel {
 
-    constructor() {
+    constructor(width, height) {
         this.entityManager = new EntityManager();
-        this.startGame();
+        this.edge = new Edge(width, height, 10);
+        this.playerPosition = [width / 2, height / 2];
         let d = new Date();
         this.prevTime = d.getTime();
+        this.startGame();
     }
 
     startGame() {
-        this.playerCharacter = new PlayerCharacter(width/2, height/2);
+
+        this.playerCharacter = new PlayerCharacter(this.playerPosition);
         this.gameActive = true;
 
-        this.entityManager.addEnemy(new Enemy(1, 20, [20, 500], [375, 375], 1, 0, 0, 0));
+        // Test enemy
+        // this.addEnemy(new Enemy(1, 20, [20, 500], [width/2, height/2], 1, 0, 0, 0));
     }
 
     playerFire(direction) {
@@ -20,6 +24,26 @@ class GameModel {
 
     addProjectile(projectile) {
         this.entityManager.addProjectile(projectile)
+    }
+
+    removeProjectile(projectile) {
+        this.entityManager.removeProjectile(projectile);
+    }
+
+    addEnemy(enemy) {
+        this.entityManager.addEnemy(enemy);
+    }
+
+    removeEnemy(enemy) {
+        this.entityManager.removeEnemy(enemy);
+    }
+
+    addEnemySeed(enemySeed) {
+        this.entityManager.addEnemySeed(enemySeed);
+    }
+
+    removeEnemySeed(enemySeed) {
+        this.entityManager.removeEnemySeed(enemySeed);
     }
 
     gameOver() {
@@ -47,6 +71,7 @@ class EntityManager {
         this.enemies = [];
         this.projectiles = [];
         this.particles = [];
+        this.enemySeeds = []
     }
 
     addProjectile(projectile) {
@@ -62,6 +87,15 @@ class EntityManager {
         this.enemies.splice(index, 1);
     }
 
+    addEnemySeed(enemySeed) {
+        this.enemySeeds.push(enemySeed);
+    }
+
+    removeEnemySeed(enemySeed) {
+        let index = this.enemySeeds.indexOf(enemySeed);
+        this.enemySeeds.splice(index, 1);
+    }
+
     removeProjectile(projectile) {
         let index = this.projectiles.indexOf(projectile);
         this.projectiles.splice(index, 1);
@@ -74,6 +108,10 @@ class EntityManager {
 
         for (const enemy of this.enemies) {
             enemy.update(deltaTime);
+        }
+
+        for (const seed of this.enemySeeds) {
+            seed.update(deltaTime);
         }
     }
 }

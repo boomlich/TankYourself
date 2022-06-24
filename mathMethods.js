@@ -24,3 +24,7 @@ function limitVector(vector, limit) {
     }
     return vector;
 }
+
+function mod(n, m) {
+    return ((n % m) + m) % m;
+  }
