@@ -17,8 +17,6 @@ class Projectile {
         let enemyHit = this.collision.checkCollision(gameModel.entityManager.enemies);
 
         if (enemyHit != null) {
-            console.log("PROJECTILE HIT");
-
             let enemyHealth = enemyHit.health;
             enemyHit.applyDamage(this.health);
             this.applyDamage(enemyHealth);

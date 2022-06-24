@@ -1,9 +1,11 @@
 let gameModel;
+let edge;
 const uiContainer = document.getElementById("uiContainer");
 
 function setup() {
     createCanvas(750, 750);
     gameModel = new GameModel(width, height);
+    edge = new Edge(width, height, 10);
     
 }
   
@@ -12,6 +14,7 @@ function draw() {
     background(0, 2, 33);
 
     gameModel.update();
+    drawEdges();
     drawPlayer();
     drawProjectiles();
     drawEnemies();
@@ -57,6 +60,23 @@ function drawEnemies() {
     }
 }
 
+function drawEdges() {
+    fill(color(0, 0, 0, 0));
+    stroke('red');
+    strokeWeight(4);
+    rect(edge.minX, edge.minY, edge.maxX, edge.maxY);
+    
+    // drawStroke(edge.minX, edge.minY, edge.maxX, edge.minY, 255);
+    // drawStroke(edge.maxX, edge.minY, edge.maxX, edge.maxY, 255);
+    // drawStroke(edge.maxX, edge.maxY, edge.minX, edge.maxY, 255);
+    // drawStroke(edge.minX, edge.maxY, edge.minX, edge.minY, 255);
+}
+
+function drawStroke(x1, y1, x2, y2, color) {
+    fill(245, 0, 120)
+    line(x1, y1, x2, y2);
+    stroke(color);
+}
 
 function mousePressed(event) {
 

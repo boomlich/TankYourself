@@ -18,5 +18,9 @@ function forceFalloff(distance, maxDistance, steepness) {
 
 function limitVector(vector, limit) {
     let length = vectorLength(vector);
-    return [vector[0] / length * limit, vector[1] / length * limit];
+    
+    if (length > limit) {
+        return [vector[0] / length * limit, vector[1] / length * limit];
+    }
+    return vector;
 }

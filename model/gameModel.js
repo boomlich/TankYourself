@@ -11,8 +11,7 @@ class GameModel {
         this.playerCharacter = new PlayerCharacter(width/2, height/2);
         this.gameActive = true;
 
-        this.entityManager.addEnemy(new Enemy(1, 20, [20, 500], [375, 375], 5, 0, 0, 0));
-
+        this.entityManager.addEnemy(new Enemy(1, 20, [20, 500], [375, 375], 1, 0, 0, 0));
     }
 
     playerFire(direction) {
