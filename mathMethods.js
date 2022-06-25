@@ -27,4 +27,20 @@ function limitVector(vector, limit) {
 
 function mod(n, m) {
     return ((n % m) + m) % m;
-  }
+}
+
+
+function parametricBlend(t) {
+    let sqt = t * t;
+    return sqt / (2.0 * (sqt - t) + 1.0);
+}
+
+function easeOutElastic(x) {
+    const c4 = (2 * Math.PI) / 3;
+    
+    return x === 0
+      ? 0
+      : x === 1
+      ? 1
+      : pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1;
+    }

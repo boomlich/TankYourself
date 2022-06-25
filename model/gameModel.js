@@ -84,7 +84,14 @@ class EntityManager {
 
     removeEnemy(enemy) {
         let index = this.enemies.indexOf(enemy);
-        this.enemies.splice(index, 1);
+        console.log("index : " + index);
+        console.log("indexD: ", this.enemies.indexOf(enemy));
+        
+        if (index > -1) {
+            this.enemies.splice(index, 1);
+        } else {
+            console.log("NOT FOUND");
+        }
     }
 
     addEnemySeed(enemySeed) {
@@ -102,16 +109,29 @@ class EntityManager {
     }
 
     update(deltaTime) {
-        for (const projectile of this.projectiles) {
-            projectile.update(deltaTime);
-        }
+        // for (const projectile of this.projectiles) {
+        //     projectile.update(deltaTime);
+        // }
 
-        for (const enemy of this.enemies) {
-            enemy.update(deltaTime);
-        }
+        this.projectiles = this.updateKillable(this.projectiles, deltaTime);
+
+        this.enemies = this.updateKillable(this.enemies, deltaTime);
 
         for (const seed of this.enemySeeds) {
             seed.update(deltaTime);
         }
+    }
+
+    updateKillable(array, deltaTime) {
+        let updatedArray = [];
+
+        for (let i = 0; i < array.length; i++) {
+            const element = array[i];
+            element.update(deltaTime);
+            if (element.health > 0) {
+                updatedArray.push(element);
+            }
+        }
+        return updatedArray;
     }
 }

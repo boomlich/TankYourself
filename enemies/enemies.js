@@ -4,7 +4,7 @@ class Enemy {
     velocity = [0.0, 0.0]
     maxAcceleration = 0.0005;
 
-    constructor(health, size, position, target, speed, score, loot, lootchance) {
+    constructor(health, startSize, finalSize, position, target, speed, score, loot, lootchance) {
         this.health = health;
         this.speed = speed;
         this.position = [position[0], position[1]];
@@ -12,12 +12,14 @@ class Enemy {
         this.score = score;
         this.loot = loot;
         this.lootchance = lootchance;
-        this.size = size;
-        this.collision = new Collision(this.position, size, size);
+        
+        this.collision = new Collision(this.position, finalSize, finalSize);
+
+        this.size = startSize;
+        this.sizeAnim = new Anim(startSize, finalSize, 5, 2);
     }
 
-    death() {
-        gameModel.removeEnemy();
+    spawn() {
     }
 
     applyForce(force) {
@@ -27,13 +29,13 @@ class Enemy {
 
     applyDamage(damage) {
         this.health -= damage;
-
-        if (this.health < 1) {
-            this.death();
-        }
     }
 
     update(deltaTime) {
+
+        if (this.sizeAnim.update(deltaTime)) {
+            this.size = this.sizeAnim.value;
+        }
 
         let direction = unitVector(pointsToVector(this.position, this.target));
         this.acceleration[0] += direction[0] * this.maxAcceleration;
@@ -58,34 +60,47 @@ class Enemy {
 
 class EnemyBasic extends Enemy {
     constructor(position) {
-        super(1, 25, position, gameModel.playerPosition, 1, 0, 0, 0);
+        super(1, 10, 25, position, gameModel.playerPosition, 1, 0, 0, 0);
     }
 }
 
 class EnemySeed {
 
     constructor(progression, duration) {
+        this.startProgression = progression;
+        this.currentProgression = 0;
         this.progression = progression;
-        this.duration = duration;
+        this.totalDuration = duration;
+        this.currentDuration = 0;
         // this.enemy = enemy;
         this.position = gameModel.edge.progressToPoint(progression);
         this.right = false;
-        this.progressionPerTimeUnit = 50 / duration; 
+        this.progressionPerSec = 50 / duration; 
+
+        this.movement = new Anim(progression, progression + 50, duration, 1);
         console.log("seed created");
     }
 
     update(deltaTime) {
-        this.duration -= deltaTime;
-        if (this.duration <= 0) {
+
+
+        if (this.movement.update(deltaTime)) {
+            let progression = mod(this.movement.value, 100);
+            this.position = gameModel.edge.progressToPoint(progression);
+        } else {
             this.spawnEnemy();
         }
-        if (this.right) {
-            this.progression = mod(this.progression + this.progressionPerTimeUnit * deltaTime, 100);
-        } else {
-            this.progression = mod(this.progression - this.progressionPerTimeUnit * deltaTime, 100);
-        }
-        console.log(this.progression);
-        this.position = gameModel.edge.progressToPoint(this.progression);
+
+        // this.currentDuration += deltaTime;
+        // if (this.currentDuration > this.totalDuration) {
+        //     this.spawnEnemy();
+        // }
+
+        // let progression = mod(this.startProgression + 50 * parametricBlend(this.currentProgression / 50), 100);
+        // this.currentProgression += this.progressionPerSec * deltaTime;
+
+        // this.position = gameModel.edge.progressToPoint(progression);
+        
     }
 
     spawnEnemy() {

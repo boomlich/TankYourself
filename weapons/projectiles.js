@@ -16,7 +16,6 @@ class Projectile {
 
         this.checkIfEdgeHit();
         this.checkIfEnemyHit();
-
     }
 
     checkIfEnemyHit() {
@@ -43,21 +42,12 @@ class Projectile {
     }
 
     edgeHit(x, y) {
-
-        gameModel.removeProjectile(this);
+        this.applyDamage(this.health);
         gameModel.addEnemySeed(new EnemySeed(gameModel.edge.pointToProgression(x, y), 3));
         console.log(gameModel.edge.pointToProgression(x, y));
     }
 
     applyDamage(damage) {
         this.health -= damage;
-
-        if (this.health < 1) {
-            this.death();
-        }
-    }
-
-    death() {
-        gameModel.removeProjectile(this);
     }
 }
