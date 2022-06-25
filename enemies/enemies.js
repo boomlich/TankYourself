@@ -41,7 +41,6 @@ class Enemy {
         this.acceleration[0] += direction[0] * this.maxAcceleration;
         this.acceleration[1] += direction[1] * this.maxAcceleration; 
 
-        // console.log(this.acceleration);
 
         this.velocity[0] += this.acceleration[0];
         this.velocity[1] += this.acceleration[1];
@@ -66,48 +65,38 @@ class EnemyBasic extends Enemy {
 
 class EnemySeed {
 
-    constructor(progression, duration) {
+    constructor(progression, duration, rightMovement) {
         this.startProgression = progression;
         this.currentProgression = 0;
         this.progression = progression;
         this.totalDuration = duration;
         this.currentDuration = 0;
-        // this.enemy = enemy;
         this.position = gameModel.edge.progressToPoint(progression);
         this.right = false;
         this.progressionPerSec = 50 / duration; 
 
-        this.movement = new Anim(progression, progression + 50, duration, 1);
+        this.health = 1;
+
+        console.log("right movement :", rightMovement);
+        let diff = rightMovement ? 50 : -50;
+        // if (!rightMovement) {
+        //     diff = -50; 
+        // }
+        this.movement = new Anim(progression, progression + diff, duration, 1);
         console.log("seed created");
     }
 
     update(deltaTime) {
-
-
         if (this.movement.update(deltaTime)) {
             let progression = mod(this.movement.value, 100);
             this.position = gameModel.edge.progressToPoint(progression);
         } else {
             this.spawnEnemy();
         }
-
-        // this.currentDuration += deltaTime;
-        // if (this.currentDuration > this.totalDuration) {
-        //     this.spawnEnemy();
-        // }
-
-        // let progression = mod(this.startProgression + 50 * parametricBlend(this.currentProgression / 50), 100);
-        // this.currentProgression += this.progressionPerSec * deltaTime;
-
-        // this.position = gameModel.edge.progressToPoint(progression);
-        
     }
 
     spawnEnemy() {
-        // gameModel.addEnemy(this.enemy);
-        console.log("enemy spawned");
-        gameModel.removeEnemySeed(this);
-        console.log(gameModel.playerPosition);
+        this.health = 0;
         gameModel.addEnemy(new EnemyBasic(this.position));
     }
 

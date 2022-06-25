@@ -10,12 +10,8 @@ class GameModel {
     }
 
     startGame() {
-
         this.playerCharacter = new PlayerCharacter(this.playerPosition);
         this.gameActive = true;
-
-        // Test enemy
-        // this.addEnemy(new Enemy(1, 20, [20, 500], [width/2, height/2], 1, 0, 0, 0));
     }
 
     playerFire(direction) {
@@ -26,24 +22,13 @@ class GameModel {
         this.entityManager.addProjectile(projectile)
     }
 
-    removeProjectile(projectile) {
-        this.entityManager.removeProjectile(projectile);
-    }
-
     addEnemy(enemy) {
         this.entityManager.addEnemy(enemy);
     }
 
-    removeEnemy(enemy) {
-        this.entityManager.removeEnemy(enemy);
-    }
 
     addEnemySeed(enemySeed) {
         this.entityManager.addEnemySeed(enemySeed);
-    }
-
-    removeEnemySeed(enemySeed) {
-        this.entityManager.removeEnemySeed(enemySeed);
     }
 
     gameOver() {
@@ -82,18 +67,6 @@ class EntityManager {
         this.enemies.push(enemy);
     }
 
-    removeEnemy(enemy) {
-        let index = this.enemies.indexOf(enemy);
-        console.log("index : " + index);
-        console.log("indexD: ", this.enemies.indexOf(enemy));
-        
-        if (index > -1) {
-            this.enemies.splice(index, 1);
-        } else {
-            console.log("NOT FOUND");
-        }
-    }
-
     addEnemySeed(enemySeed) {
         this.enemySeeds.push(enemySeed);
     }
@@ -103,23 +76,10 @@ class EntityManager {
         this.enemySeeds.splice(index, 1);
     }
 
-    removeProjectile(projectile) {
-        let index = this.projectiles.indexOf(projectile);
-        this.projectiles.splice(index, 1);
-    }
-
     update(deltaTime) {
-        // for (const projectile of this.projectiles) {
-        //     projectile.update(deltaTime);
-        // }
-
         this.projectiles = this.updateKillable(this.projectiles, deltaTime);
-
         this.enemies = this.updateKillable(this.enemies, deltaTime);
-
-        for (const seed of this.enemySeeds) {
-            seed.update(deltaTime);
-        }
+        this.enemySeeds = this.updateKillable(this.enemySeeds, deltaTime);
     }
 
     updateKillable(array, deltaTime) {

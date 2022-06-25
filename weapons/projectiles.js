@@ -31,19 +31,19 @@ class Projectile {
         let edge = gameModel.edge;
 
         if (this.position[0] < edge.minX) {
-            this.edgeHit(edge.minX, this.position[1]);
+            this.edgeHit(edge.minX, this.position[1], this.direction[1] < 0);
         } else if (this.position[0] > edge.maxX) {
-            this.edgeHit(edge.maxX, this.position[1]);
+            this.edgeHit(edge.maxX, this.position[1], this.direction[1] > 0);
         } else if (this.position[1] < edge.minY) {
-            this.edgeHit(this.position[0], edge.minY);
+            this.edgeHit(this.position[0], edge.minY, this.direction[0] > 0);
         } else if (this.position[1] > edge.maxY) {
-            this.edgeHit(this.position[0], edge.maxY);
+            this.edgeHit(this.position[0], edge.maxY, this.direction[0] < 0);
         }
     }
 
-    edgeHit(x, y) {
+    edgeHit(x, y, rightMovement) {
         this.applyDamage(this.health);
-        gameModel.addEnemySeed(new EnemySeed(gameModel.edge.pointToProgression(x, y), 3));
+        gameModel.addEnemySeed(new EnemySeed(gameModel.edge.pointToProgression(x, y), 3, rightMovement));
         console.log(gameModel.edge.pointToProgression(x, y));
     }
 
