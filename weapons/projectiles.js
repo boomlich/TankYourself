@@ -1,13 +1,13 @@
 class Projectile {
 
-    constructor(position, direction, force, size, health) {
+    constructor(position, direction, force, size, damage) {
         this.position = [position[0], position[1]];
         this.direction = direction;
         this.force = force;
         this.size = size;
         this.collision = new Collision(this.position, this.size, this.size);
         this.entityManager = gameModel.entityManager;
-        this.health = health;
+        this.health = damage;
     }
 
     update(deltaTime) {

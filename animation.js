@@ -12,10 +12,6 @@ class Anim {
         this.animCurve = animCurve;
     }
 
-    restart() {
-        this.currentProgress = 0;
-    }
-
     update(deltaTime) {
 
         this.currentDuration += deltaTime;

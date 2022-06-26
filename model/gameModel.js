@@ -10,7 +10,7 @@ class GameModel {
     }
 
     startGame() {
-        this.playerCharacter = new PlayerCharacter(this.playerPosition);
+        this.playerCharacter = new PlayerCharacter(this.playerPosition, 3, 0, 0);
         this.gameActive = true;
     }
 

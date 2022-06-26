@@ -1,6 +1,9 @@
 let gameModel;
 let edge;
 const uiContainer = document.getElementById("uiContainer");
+const HUD = document.getElementById("HUD");
+
+
 
 function setup() {
     createCanvas(500, 500);
@@ -18,9 +21,6 @@ function draw() {
     drawProjectiles();
     drawEnemies();
     drawEnemySeed();
-
-    
-    
     drawingContext.shadowBlur = 32;
 
     textSize(32);
@@ -85,13 +85,17 @@ function drawEnemySeed() {
 
 function mousePressed(event) {
 
-    if (event.path[0] == uiContainer) {
-        if (gameModel.gameActive) {
-            gameModel.playerFire(mouseDirUnit);
-        }
-    }
+
 }
 
-function mouseReleased() {
+function mouseReleased(event) {
 
+    if (gameModel.gameActive) {
+        gameModel.playerFire(mouseDirUnit);
+    }
+    // if (event.path[0] == uiContainer) {
+    //     if (gameModel.gameActive) {
+    //         gameModel.playerFire(mouseDirUnit);
+    //     }
+    // }
 }
