@@ -12,6 +12,8 @@ class GameModel {
     startGame() {
         this.playerCharacter = new PlayerCharacter(this.playerPosition, 3, 0, 0);
         this.gameActive = true;
+
+        // this.addEnemy(new EnemyBasic([20, 20]));
     }
 
     playerFire(direction) {

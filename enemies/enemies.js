@@ -31,25 +31,29 @@ class Enemy {
         this.health -= damage;
     }
 
+    calculateAcceleration(position, target, velocity, maxSpeed, force) {
+
+        let desiredVelocity = unitVector([target[0] - position[0], target[1] - position[1]]);
+        desiredVelocity = [desiredVelocity[0] * maxSpeed, desiredVelocity[1] * maxSpeed];
+
+        let steeringVelocity = unitVector([desiredVelocity[0] - velocity[0], desiredVelocity[1] - velocity[1]]);
+        steeringVelocity[0] *= 0.01;
+        steeringVelocity[1] *= 0.01;
+
+        return steeringVelocity;
+    }
+
     update(deltaTime) {
 
         if (this.sizeAnim.update(deltaTime)) {
             this.size = this.sizeAnim.value;
         }
 
-        let direction = unitVector(pointsToVector(this.position, this.target));
-        this.acceleration[0] += direction[0] * this.maxAcceleration;
-        this.acceleration[1] += direction[1] * this.maxAcceleration; 
-
+        this.acceleration = this.calculateAcceleration(this.position, this.target, this.velocity, this.speed, 0);
 
         this.velocity[0] += this.acceleration[0];
         this.velocity[1] += this.acceleration[1];
-
         this.velocity = limitVector(this.velocity, this.speed);
-
-        if (vectorLength(this.velocity) == this.speed) {
-            this.acceleration = [0, 0];
-        }
 
         this.position[0] += this.velocity[0];
         this.position[1] += this.velocity[1];
@@ -79,9 +83,6 @@ class EnemySeed {
 
         console.log("right movement :", rightMovement);
         let diff = rightMovement ? 50 : -50;
-        // if (!rightMovement) {
-        //     diff = -50; 
-        // }
         this.movement = new Anim(progression, progression + diff, duration, 1);
         console.log("seed created");
     }
