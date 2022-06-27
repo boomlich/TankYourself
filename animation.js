@@ -12,6 +12,10 @@ class Anim {
         this.animCurve = animCurve;
     }
 
+    markFinished() {
+        this.currentDuration = this.totalDuration;
+    }
+
     update(deltaTime) {
 
         this.currentDuration += deltaTime;

@@ -22,13 +22,14 @@ function draw() {
     drawEnemies();
     drawEnemySeed();
     
-    drawingContext.shadowBlur = 32;
+    // drawingContext.shadowBlur = 32;
 
     mouseDirection = unitVector([mouseX - width/2, mouseY - width/2]);
 
 
     textSize(20);
     text(Math.round(gameModel.elapsedTime * 100) / 100, 25, 40);
+    text(Math.round(gameModel.fps * 1) / 1, width - 100, 40)
 }
 
 

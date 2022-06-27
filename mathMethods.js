@@ -1,5 +1,8 @@
 function unitVector(vector) {
     length = vectorLength(vector);
+    if (length == 0) {
+        return [0, 0]
+    }
     return [vector[0] / length, vector[1] / length];
 }
 

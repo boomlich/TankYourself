@@ -2,9 +2,8 @@ class Enemy {
 
     acceleration = [0.0, 0.0];
     velocity = [0.0, 0.0]
-    maxAcceleration = 0.0005;
 
-    constructor(health, startSize, finalSize, position, target, speed, score, loot, lootchance) {
+    constructor(health, position, target, speed, score, loot, lootchance) {
         this.health = health;
         this.speed = speed;
         this.position = [position[0], position[1]];
@@ -12,14 +11,23 @@ class Enemy {
         this.score = score;
         this.loot = loot;
         this.lootchance = lootchance;
+        this.startSize = 10;
+        this.finalSize = this.calculateSize(this.health);
         
-        this.collision = new Collision(this.position, finalSize, finalSize);
+        this.collision = new Collision(this.position, this.finalSize, this.finalSize);
 
-        this.size = startSize;
-        this.sizeAnim = new Anim(startSize, finalSize, 5, 2);
+        this.size = this.startSize;
+        this.sizeAnim = new Anim(this.startSize, this.finalSize, 5, 2);
     }
 
-    spawn() {
+    calculateSize(health) {
+        if (health == 1) {
+            return 15;
+        } else if (health == 2) {
+            return 25;
+        } else {
+            return 30
+        }
     }
 
     applyForce(force) {
@@ -29,6 +37,15 @@ class Enemy {
 
     applyDamage(damage) {
         this.health -= damage;
+
+        if (this.health > 0) {
+            this.sizeAnim.markFinished();
+            this.size = this.calculateSize(this.health);
+        }
+    }
+
+    makeCopyAtPos(position) {
+        return new Enemy(this.health, position, this.target, this.speed, this.score, this.loot, this.lootchance);
     }
 
     calculateAcceleration(position, target, velocity, maxSpeed, force) {
@@ -56,20 +73,32 @@ class Enemy {
         this.velocity = limitVector(this.velocity, this.speed);
 
         this.position[0] += this.velocity[0];
-        this.position[1] += this.velocity[1];
-        
+        this.position[1] += this.velocity[1];  
     }
 }
 
 class EnemyBasic extends Enemy {
-    constructor(position) {
-        super(1, 10, 25, position, gameModel.playerPosition, 1, 0, 0, 0);
+    constructor(position, playerPosition) {
+        super(1, position, playerPosition, 1, 0, 0, 0);
+    }
+}
+
+class EnemyMega extends Enemy {
+    constructor(position, playerPosition) {
+        super(2, position, playerPosition, 1, 0, 0, 0)
+    }
+}
+
+class EnemyGiga extends Enemy {
+    constructor(position, playerPosition) {
+        super(3, position, playerPosition, 1, 0, 0, 0)
     }
 }
 
 class EnemySeed {
 
-    constructor(progression, duration, rightMovement) {
+    constructor(enemy, progression, duration, rightMovement) {
+        this.enemy = enemy;
         this.startProgression = progression;
         this.currentProgression = 0;
         this.progression = progression;
@@ -98,7 +127,6 @@ class EnemySeed {
 
     spawnEnemy() {
         this.health = 0;
-        gameModel.addEnemy(new EnemyBasic(this.position));
+        gameModel.addEnemy(this.enemy.makeCopyAtPos(this.position));
     }
-
 }

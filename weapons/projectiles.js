@@ -1,12 +1,22 @@
 class Projectile {
 
-    constructor(position, direction, force, size, damage) {
+    constructor(position, direction, force, damage) {
         this.position = [position[0], position[1]];
         this.direction = direction;
         this.force = force;
-        this.size = size;
         this.collision = new Collision(this.position, this.size, this.size);
         this.health = damage;
+        this.size = this.setSize(this.health);
+    }
+
+    setSize(health) {
+        if (health == 1) {
+            return 15;
+        } else if (health == 2) {
+            return 25;
+        } else {
+            return 30
+        }
     }
 
     update(deltaTime) {
@@ -27,7 +37,7 @@ class Projectile {
     }
 
     makeCopyWithDirection(direction) {
-        return new Projectile(this.position, direction, this.force, this.size, this.health);
+        return new Projectile(this.position, direction, this.force, this.health);
     }
 
     checkIfEdgeHit() {
@@ -45,30 +55,41 @@ class Projectile {
     }
 
     edgeHit(x, y, rightMovement) {
+
+        let enemy;
+        if (this.health == 1) {
+            enemy = new EnemyBasic([0, 0], gameModel.playerPosition);
+        } else if (this.health == 2) {
+            enemy = new EnemyMega([0, 0], gameModel.playerPosition);
+        } else {
+            enemy = new EnemyGiga([0, 0], gameModel.playerPosition);
+        }
+
         this.applyDamage(this.health);
-        gameModel.addEnemySeed(new EnemySeed(gameModel.edge.pointToProgression(x, y), 3, rightMovement));
-        console.log(gameModel.edge.pointToProgression(x, y));
+        gameModel.addEnemySeed(new EnemySeed(enemy, gameModel.edge.pointToProgression(x, y), 3, rightMovement));
     }
 
     applyDamage(damage) {
         this.health -= damage;
+
+        this.size = this.setSize(this.health);
     }
 }
 
 class BasicBullet extends Projectile {
     constructor(position, direction) {
-        super(position, direction, 100, 20, 1);
+        super(position, direction, 100, 1);
     }
 }
 
 class MegaBullet extends Projectile {
     constructor(position, direction) {
-        super(position, direction, 10, 25, 2);
+        super(position, direction, 100, 2);
     }
 }
 
 class GigaBullet extends Projectile {
     constructor(position, direction) {
-        super(position, direction, 15, 30, 3);
+        super(position, direction, 100, 3);
     }
 }

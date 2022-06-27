@@ -1,25 +1,23 @@
 class GameModel {
 
+    fps;
     elapsedTime;
+    enemySpawnChance;
 
     constructor(width, height) {
         this.entityManager = new EntityManager();
         this.edge = new Edge(width, height, 10);
         this.playerPosition = [width / 2, height / 2];
+        this.enemySpawnManager = new EnemySpawnManager(this, this.edge, this.playerPosition);
         let d = new Date();
         this.prevTime = d.getTime();
         this.startGame();
     }
 
     startGame() {
-
-        // console.log(this.entityManager);
         this.playerCharacter = new PlayerCharacter(this.playerPosition, 1, 1, 1);
         this.gameActive = true;
         this.elapsedTime = 0;
-
-        // this.randomEnemySpawn(500);
-
     }
 
     playerFire(direction, fireTime) {
@@ -51,42 +49,66 @@ class GameModel {
         deltaTime = (nowTime - this.prevTime) / 1000.0;
         this.prevTime = nowTime;
 
+        this.fps = 1 / deltaTime;
+
         if (this.gameActive) {
 
             this.elapsedTime += deltaTime;
-            
-            this.randomEnemySpawn(deltaTime);
-            
-
-
-
 
             // update entities
             this.entityManager.update(deltaTime);
             this.playerCharacter.update(deltaTime);
+            this.enemySpawnManager.update(deltaTime);
+        }
+    }
+}
+
+class EnemySpawnManager {
+    constructor(gameModel, edge, playerPosition) {
+        this.enemySpawners = [
+            new EnemySpawner(new EnemyBasic([0, 0], playerPosition), 0.1, 0.25, 0, 200, gameModel, edge)
+        ];
+    }
+
+    update(deltaTime) {
+        for (const spawner of this.enemySpawners) {
+            spawner.update(deltaTime);
+        }
+    }
+}
+
+class EnemySpawner {
+    constructor(enemy, startChance, chanceLimit, startTime, increaseTime, gameModel, edge) {
+        this.enemy = enemy;
+        this.currentChance = startChance;
+        this.chanceLimit = chanceLimit;
+        this.startTime = startTime;
+        this.gameModel = gameModel;
+        this.edge = edge;
+
+        this.incrementPerSec = (chanceLimit - startChance) / increaseTime;
+    }
+
+    update(deltaTime) {
+        if (gameModel.elapsedTime > this.startTime) {
+            this.enemySpawnRoll(deltaTime);
+            this.currentChance += this.incrementPerSec * deltaTime;
         }
     }
 
-    randomEnemySpawn(deltaTime) {
-
-        // let maxTime = 1000;
-        // let timeProgression = 1;
-        // if (elapsedTime < maxTime) {
-        //     timeProgression = elapsedTime / 1000;
-        // }
-        
-        let roll = Math.floor(Math.random() * 100);
-
-        console.log(roll);
-
-        let chance = 0.0000001 * deltaTime;
+    enemySpawnRoll(deltaTime) {
+        let roll = Math.random();
+        let chance = this.currentChance * deltaTime;
 
         if (roll < chance) {
-            let pos = this.edge.progressToPoint(Math.floor(Math.random() * 101));
-            this.addEnemy(new EnemyBasic(pos));
+            this.spawnEnemyAtRandomPos();
         }
+    }
 
-        // let spawnedEnemy = new EnemyBasic();
+    spawnEnemyAtRandomPos() {
+        let pos = this.edge.progressToPoint(Math.floor(Math.random() * 101));
+        this.gameModel.addEnemy(this.enemy.makeCopyAtPos(pos));
+        console.log("sPAWNED");
     }
 }
 
