@@ -6,7 +6,6 @@ class Projectile {
         this.force = force;
         this.size = size;
         this.collision = new Collision(this.position, this.size, this.size);
-        this.entityManager = gameModel.entityManager;
         this.health = damage;
     }
 
@@ -25,6 +24,10 @@ class Projectile {
             enemyHit.applyDamage(this.health);
             this.applyDamage(enemyHealth);
         }
+    }
+
+    makeCopyWithDirection(direction) {
+        return new Projectile(this.position, direction, this.force, this.size, this.health);
     }
 
     checkIfEdgeHit() {
@@ -49,5 +52,23 @@ class Projectile {
 
     applyDamage(damage) {
         this.health -= damage;
+    }
+}
+
+class BasicBullet extends Projectile {
+    constructor(position, direction) {
+        super(position, direction, 100, 20, 1);
+    }
+}
+
+class MegaBullet extends Projectile {
+    constructor(position, direction) {
+        super(position, direction, 10, 25, 2);
+    }
+}
+
+class GigaBullet extends Projectile {
+    constructor(position, direction) {
+        super(position, direction, 15, 30, 3);
     }
 }

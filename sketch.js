@@ -21,14 +21,14 @@ function draw() {
     drawProjectiles();
     drawEnemies();
     drawEnemySeed();
+    
     drawingContext.shadowBlur = 32;
 
-    textSize(32);
+    mouseDirection = unitVector([mouseX - width/2, mouseY - width/2]);
 
-    mouseDir = [mouseX - width/2, mouseY - width/2]
-    mouseDirUnit = unitVector(mouseDir);
-    // text(mouseDir[0] + " . " + mouseDir[1], 10, 30);
-    // text(mouseDirUnit[0] + " . " + mouseDirUnit[1], 10, 100);
+
+    textSize(20);
+    text(Math.round(gameModel.elapsedTime * 100) / 100, 25, 40);
 }
 
 
@@ -83,19 +83,14 @@ function drawEnemySeed() {
     
 }
 
-function mousePressed(event) {
+// function mousePressed(event) {
 
 
-}
+// }
 
-function mouseReleased(event) {
+// function mouseReleased(event) {
 
-    if (gameModel.gameActive) {
-        gameModel.playerFire(mouseDirUnit);
-    }
-    // if (event.path[0] == uiContainer) {
-    //     if (gameModel.gameActive) {
-    //         gameModel.playerFire(mouseDirUnit);
-    //     }
-    // }
-}
+//     if (gameModel.gameActive) {
+//         gameModel.playerFire(mouseDirection);
+//     }
+// }

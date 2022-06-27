@@ -1,5 +1,7 @@
 class GameModel {
 
+    elapsedTime;
+
     constructor(width, height) {
         this.entityManager = new EntityManager();
         this.edge = new Edge(width, height, 10);
@@ -10,14 +12,18 @@ class GameModel {
     }
 
     startGame() {
-        this.playerCharacter = new PlayerCharacter(this.playerPosition, 3, 0, 0);
-        this.gameActive = true;
 
-        // this.addEnemy(new EnemyBasic([20, 20]));
+        // console.log(this.entityManager);
+        this.playerCharacter = new PlayerCharacter(this.playerPosition, 1, 1, 1);
+        this.gameActive = true;
+        this.elapsedTime = 0;
+
+        // this.randomEnemySpawn(500);
+
     }
 
-    playerFire(direction) {
-        this.playerCharacter.fireWeapon(direction);
+    playerFire(direction, fireTime) {
+        this.playerCharacter.fireWeapon(direction, fireTime);
     }
 
     addProjectile(projectile) {
@@ -45,9 +51,42 @@ class GameModel {
         deltaTime = (nowTime - this.prevTime) / 1000.0;
         this.prevTime = nowTime;
 
-        // update entities
-        this.entityManager.update(deltaTime);
-        this.playerCharacter.update(deltaTime);
+        if (this.gameActive) {
+
+            this.elapsedTime += deltaTime;
+            
+            this.randomEnemySpawn(deltaTime);
+            
+
+
+
+
+            // update entities
+            this.entityManager.update(deltaTime);
+            this.playerCharacter.update(deltaTime);
+        }
+    }
+
+    randomEnemySpawn(deltaTime) {
+
+        // let maxTime = 1000;
+        // let timeProgression = 1;
+        // if (elapsedTime < maxTime) {
+        //     timeProgression = elapsedTime / 1000;
+        // }
+        
+        let roll = Math.floor(Math.random() * 100);
+
+        console.log(roll);
+
+        let chance = 0.0000001 * deltaTime;
+
+        if (roll < chance) {
+            let pos = this.edge.progressToPoint(Math.floor(Math.random() * 101));
+            this.addEnemy(new EnemyBasic(pos));
+        }
+
+        // let spawnedEnemy = new EnemyBasic();
     }
 }
 
@@ -63,6 +102,7 @@ class EntityManager {
 
     addProjectile(projectile) {
         this.projectiles.push(projectile);
+        console.log(this.projectiles);
     }
 
     addEnemy(enemy) {
@@ -82,13 +122,13 @@ class EntityManager {
         this.projectiles = this.updateKillable(this.projectiles, deltaTime);
         this.enemies = this.updateKillable(this.enemies, deltaTime);
         this.enemySeeds = this.updateKillable(this.enemySeeds, deltaTime);
+        // console.log(this.projectiles);
     }
 
     updateKillable(array, deltaTime) {
         let updatedArray = [];
 
-        for (let i = 0; i < array.length; i++) {
-            const element = array[i];
+        for (const element of array) {
             element.update(deltaTime);
             if (element.health > 0) {
                 updatedArray.push(element);
