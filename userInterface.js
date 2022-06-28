@@ -9,10 +9,8 @@ function addAmmoIcon() {
     let ammoIcon = document.createElement("div");
     ammoIcon.className = "ammoBasic";
     ammoIcon.id = d;
-    console.log(d);
     HUD.appendChild(ammoIcon);
     ammoIconBasicID.push(d);
-    console.log(ammoIconBasicID);
 }
 
 function removeAmmoIcon() {

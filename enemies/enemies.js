@@ -41,7 +41,14 @@ class Enemy {
         if (this.health > 0) {
             this.sizeAnim.markFinished();
             this.size = this.calculateSize(this.health);
+        } else {
+            this.death();
         }
+    }
+
+    death() {
+        let explosion = new Explosion(this.position, 100, 10, 10, 0, 255, 255);
+        explosion.trigger();
     }
 
     makeCopyAtPos(position) {
@@ -110,10 +117,8 @@ class EnemySeed {
 
         this.health = 1;
 
-        console.log("right movement :", rightMovement);
         let diff = rightMovement ? 50 : -50;
         this.movement = new Anim(progression, progression + diff, duration, 1);
-        console.log("seed created");
     }
 
     update(deltaTime) {

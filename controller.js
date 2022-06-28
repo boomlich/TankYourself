@@ -13,9 +13,6 @@ function mouseReleased(event) {
         let currentTime = d.getTime();
         let mousePressedTime = currentTime - timePressed;
 
-        console.log("Pressed time: ", mousePressedTime);
-        console.log("RELEASED");
-
         gameModel.playerFire(mouseDirection, mousePressedTime);
     }
 }

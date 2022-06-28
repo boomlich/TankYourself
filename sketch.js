@@ -21,6 +21,7 @@ function draw() {
     drawProjectiles();
     drawEnemies();
     drawEnemySeed();
+    drawParticles();
     
     // drawingContext.shadowBlur = 32;
 
@@ -75,6 +76,14 @@ function drawStroke(x1, y1, x2, y2, color) {
     // stroke(color);
 }
 
+function drawParticles() {
+    let particles = gameModel.entityManager.particles;
+
+    for (const particle of particles) {
+        ellipse(particle.position[0], particle.position[1], particle.size);
+    }
+}
+
 function drawEnemySeed() {
     let enemySeeds = gameModel.entityManager.enemySeeds;
 
@@ -83,15 +92,3 @@ function drawEnemySeed() {
     }
     
 }
-
-// function mousePressed(event) {
-
-
-// }
-
-// function mouseReleased(event) {
-
-//     if (gameModel.gameActive) {
-//         gameModel.playerFire(mouseDirection);
-//     }
-// }

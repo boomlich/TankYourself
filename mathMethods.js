@@ -46,4 +46,12 @@ function easeOutElastic(x) {
       : x === 1
       ? 1
       : pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1;
-    }
+}
+
+function easeOutCirc(x) {
+    return sqrt(1 - pow(x - 1, 2));
+}
+
+function randomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+}

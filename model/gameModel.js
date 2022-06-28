@@ -32,6 +32,10 @@ class GameModel {
         this.entityManager.addEnemy(enemy);
     }
 
+    addParticle(particle) {
+        this.entityManager.addParticle(particle);
+    }
+
 
     addEnemySeed(enemySeed) {
         this.entityManager.addEnemySeed(enemySeed);
@@ -66,7 +70,10 @@ class GameModel {
 class EnemySpawnManager {
     constructor(gameModel, edge, playerPosition) {
         this.enemySpawners = [
-            new EnemySpawner(new EnemyBasic([0, 0], playerPosition), 0.1, 0.25, 0, 200, gameModel, edge)
+            new EnemySpawner(new EnemyBasic([0, 0], playerPosition), 0.05, 0.20, 0, 200, gameModel, edge),
+            new EnemySpawner(new EnemyMega([0, 0], playerPosition), 0.01, 0.1, 50, 200, gameModel, edge),
+            new EnemySpawner(new EnemyGiga([0, 0], playerPosition), 0.005, 0.05, 100, 200, gameModel, edge),
+
         ];
     }
 
@@ -124,7 +131,6 @@ class EntityManager {
 
     addProjectile(projectile) {
         this.projectiles.push(projectile);
-        console.log(this.projectiles);
     }
 
     addEnemy(enemy) {
@@ -133,6 +139,11 @@ class EntityManager {
 
     addEnemySeed(enemySeed) {
         this.enemySeeds.push(enemySeed);
+    }
+
+    addParticle(particle) {
+        this.particles.push(particle);
+        // console.log("PARTICLES: " + this.particles);
     }
 
     removeEnemySeed(enemySeed) {
@@ -144,6 +155,7 @@ class EntityManager {
         this.projectiles = this.updateKillable(this.projectiles, deltaTime);
         this.enemies = this.updateKillable(this.enemies, deltaTime);
         this.enemySeeds = this.updateKillable(this.enemySeeds, deltaTime);
+        this.particles = this.updateKillable(this.particles, deltaTime);
         // console.log(this.projectiles);
     }
 
