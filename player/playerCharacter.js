@@ -1,6 +1,6 @@
 class PlayerCharacter {
 
-    constructor(position, basicBullets, megaBullets, gigaBullets) {
+    constructor(position, basicBullets, megaBullets, gigaBullets, health) {
         this.size = 30;
         this.position = [position[0] - this.size / 2, position[1] - this.size / 2];
 
@@ -11,6 +11,8 @@ class PlayerCharacter {
         this.weapons = [this.basicGun, this.megaGun, this.gigaGun];
 
         this.collision = new Collision(this.position, this.size, this.size);
+
+        this.health = health;
     }
 
     fireWeapon(direction, fireTime) {
@@ -25,13 +27,33 @@ class PlayerCharacter {
     }
 
     update(deltaTime) {
-        if (this.collision.checkCollision(gameModel.entityManager.enemies)) {
-            gameModel.gameOver();
-        }
+        this.checkEnemyCollision();
 
         for (const gun of this.weapons) {
             gun.update(deltaTime);
         }
     }
 
+    checkEnemyCollision() {
+        let enemy = this.collision.checkCollision(gameModel.entityManager.enemies);
+        if (enemy != null) {
+            this.applyDamage(enemy.health);
+            enemy.applyDamage(enemy.health);
+        }
+    }
+
+    applyDamage(damage) {
+        this.health -= damage;
+        console.log(this.health);
+
+        
+
+        if (this.health < 1) {
+            this.death();
+        }
+    }
+    
+    death() {
+
+    }
 }

@@ -30,13 +30,13 @@ class Edge {
         if (y == this.minY) {
             lineProgression = x / this.edgeWidth;
             return 25 * lineProgression;
-        } else if (x == this.maxX) {
+        } else if (x === this.maxX) {
             lineProgression = y / this.edgeHeight;
             return 25 + 25 * + lineProgression;
-        } else if (y == this.maxY) {
+        } else if (y === this.maxY) {
             lineProgression = (this.edgeWidth - x) / this.edgeWidth;
             return 50 + 25 * lineProgression;
-        } else if (x == this.minX) {
+        } else if (x === this.minX) {
             lineProgression = (this.edgeHeight - y) / this.edgeHeight;
             return 75 + 25 * lineProgression;
             

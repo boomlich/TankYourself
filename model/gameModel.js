@@ -3,6 +3,8 @@ class GameModel {
     fps;
     elapsedTime;
     enemySpawnChance;
+    gameScore;
+    gameCoins;
 
     constructor(width, height) {
         this.entityManager = new EntityManager();
@@ -15,9 +17,17 @@ class GameModel {
     }
 
     startGame() {
-        this.playerCharacter = new PlayerCharacter(this.playerPosition, 1, 1, 1);
+        
+        addHUD();
+
+        this.playerCharacter = new PlayerCharacter(this.playerPosition, 1, 1, 1, 3);
         this.gameActive = true;
         this.elapsedTime = 0;
+        this.gameScore = 0;
+        this.gameCoins = 0;
+
+        addHealthDisplay(3);
+        addScoreContainer();
     }
 
     playerFire(direction, fireTime) {
@@ -63,6 +73,10 @@ class GameModel {
             this.entityManager.update(deltaTime);
             this.playerCharacter.update(deltaTime);
             this.enemySpawnManager.update(deltaTime);
+
+            HUD_score.innerHTML = this.gameScore;
+            HUD_coins.innerHTML = this.gameCoins;
+            updateHealthIcons(this.playerCharacter.health);
         }
     }
 }
@@ -155,7 +169,6 @@ class EntityManager {
         this.enemies = this.updateKillable(this.enemies, deltaTime);
         this.enemySeeds = this.updateKillable(this.enemySeeds, deltaTime);
         this.particles = this.updateKillable(this.particles, deltaTime);
-        // console.log(this.projectiles);
     }
 
     updateKillable(array, deltaTime) {

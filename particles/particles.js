@@ -3,7 +3,6 @@ class Particle {
     constructor(spawn, forceX, forceY, startSize, endSize, startColor, endColor, animStyle, totalDuration) {
         this.position = [spawn[0], spawn[1]];
         this.size = startSize;
-        this.color = startColor;
         this.health = 1;
 
         this.offsetX = 0;
@@ -16,7 +15,12 @@ class Particle {
         this.positionYAnim = new Anim(spawn[1], forceY, this.totalDuration, animStyle);
 
         this.sizeAnim = new Anim(startSize, endSize, this.totalDuration, animStyle);
-        this.colorAnim = new Anim(startColor, endColor, this.totalDuration, animStyle);
+
+        this.color = startColor;
+        this.colorAnimR = new Anim(startColor[0], endColor[0], totalDuration, animStyle);
+        this.colorAnimG = new Anim(startColor[1], endColor[1], totalDuration, animStyle);
+        this.colorAnimB = new Anim(startColor[2], endColor[2], totalDuration, animStyle);
+        this.colorAnimA = new Anim(startColor[3], endColor[3], totalDuration, animStyle);
     }
 
     update(deltaTime) {
@@ -28,7 +32,12 @@ class Particle {
         this.position[0] = this.getNewAnimValue(this.position[0], this.positionXAnim, deltaTime) + this.offsetX;
         this.position[1] = this.getNewAnimValue(this.position[1], this.positionYAnim, deltaTime) + this.offsetY;
         this.size = this.getNewAnimValue(this.size, this.sizeAnim, deltaTime);
-        this.color = this.getNewAnimValue(this.color, this.colorAnim, deltaTime);
+
+        let colorR = this.getNewAnimValue(this.color[0], this.colorAnimR, deltaTime);
+        let colorG = this.getNewAnimValue(this.color[1], this.colorAnimG, deltaTime);
+        let colorB = this.getNewAnimValue(this.color[2], this.colorAnimB, deltaTime);
+        let colorA = this.getNewAnimValue(this.color[3], this.colorAnimA, deltaTime);
+        this.color = [colorR, colorG, colorB, colorA];
 
         this.currentDuration += deltaTime;
     }
@@ -67,5 +76,31 @@ class Explosion {
 
     calculateRandomForce(min, max) {
         let force = randomNumber();
+    }
+}
+
+class Trail {
+
+    constructor(position, frequency, timeToLive, startSize, endSize, startColor, endColor) {
+        this.position = position;
+        this.frequency = frequency / 1000;
+        this.timeToLive = timeToLive;
+        this.startSize = startSize;
+        this.endSize = endSize;
+        this.startColor = startColor;
+        this.endColor = endColor;
+
+        this.spawnTimer = 0;
+    }
+
+    update(deltaTime) {
+        if (this.spawnTimer > this.frequency) {
+            let count = Math.floor(this.spawnTimer / this.frequency);
+            for (let i = 0; i < count; i++) {
+                gameModel.addParticle(new Particle(this.position, this.position[0], this.position[1], this.startSize, this.endSize, this.startColor, this.endColor, 0, this.timeToLive));
+            }
+            this.spawnTimer -= this.frequency * count;
+        }
+        this.spawnTimer += deltaTime;
     }
 }

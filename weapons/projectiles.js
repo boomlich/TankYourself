@@ -7,12 +7,14 @@ class Projectile {
         this.health = damage;
         this.size = this.setSize(this.health);
         this.collision = new Collision(this.position, this.size, this.size);
+        this.trail = new Trail(this.position, 30, 1, this.size * 0.5, 0, [255, 255, 255, 255], [255, 255, 255, 255]);
+        this.color = [0, 187, 255, 255];
     }
 
     setSize(health) {
-        if (health == 1) {
+        if (health === 1) {
             return 15;
-        } else if (health == 2) {
+        } else if (health === 2) {
             return 25;
         } else {
             return 30
@@ -22,7 +24,8 @@ class Projectile {
     update(deltaTime) {
         this.position[0] += this.direction[0] * this.force * deltaTime;
         this.position[1] += this.direction[1] * this.force * deltaTime;
-        // this.collision.updatePosition([this.position[0] - this.collision.width / 2, this.position[1] - this.collision.height / 2]);
+
+        this.trail.update(deltaTime);
         
         this.checkIfEdgeHit();
         this.checkIfEnemyHit();
@@ -61,9 +64,9 @@ class Projectile {
     edgeHit(x, y, rightMovement) {
 
         let enemy;
-        if (this.health == 1) {
+        if (this.health === 1) {
             enemy = new EnemyBasic([0, 0], gameModel.playerPosition);
-        } else if (this.health == 2) {
+        } else if (this.health === 2) {
             enemy = new EnemyMega([0, 0], gameModel.playerPosition);
         } else {
             enemy = new EnemyGiga([0, 0], gameModel.playerPosition);
@@ -71,9 +74,9 @@ class Projectile {
 
         let edgeProgression = gameModel.edge.pointToProgression(x, y);
         let pointOnEdge = gameModel.edge.progressToPoint(edgeProgression);
-
-        let transititonTime = 1;
-        let particle = new Particle(this.position, pointOnEdge[0], pointOnEdge[1], this.size, 10, 255, 255, 4, transititonTime);
+        let transititonTime = 1 + 0.5 * this.health;
+        
+        let particle = new Particle(this.position, pointOnEdge[0], pointOnEdge[1], this.size, 10, this.color, enemy.color, 4, transititonTime);
         gameModel.addParticle(particle);
 
         this.applyDamage(this.health);

@@ -24,18 +24,21 @@ class Anim {
         }
 
         let multiplier = 0;
-        if (this.animCurve === 0) {
-            multiplier = this.currentProgress / this.differance;
-        } else if (this.animCurve === 1) {
-            multiplier = parametricBlend(this.currentProgress / this.differance);
-        } else if (this.animCurve === 2) {
-            multiplier = easeOutElastic(this.currentProgress / this.differance);
-        } else if (this.animCurve === 3) {
-            multiplier = easeOutCirc(this.currentProgress / this.differance);
-        } else if (this.animCurve === 4) {
-            multiplier = easeOutQuint(this.currentProgress / this.differance);
+        if (this.differance != 0) {
+            if (this.animCurve === 0) {
+                multiplier = this.currentProgress / this.differance;
+            } else if (this.animCurve === 1) {
+                multiplier = parametricBlend(this.currentProgress / this.differance);
+            } else if (this.animCurve === 2) {
+                multiplier = easeOutElastic(this.currentProgress / this.differance);
+            } else if (this.animCurve === 3) {
+                multiplier = easeOutCirc(this.currentProgress / this.differance);
+            } else if (this.animCurve === 4) {
+                multiplier = easeOutQuint(this.currentProgress / this.differance);
+            }
         }
 
+    
         this.value = this.start + this.differance * multiplier;
         this.currentProgress += this.progressPerTime * deltaTime;
 

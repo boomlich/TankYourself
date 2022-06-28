@@ -18,6 +18,8 @@ class Enemy {
 
         this.size = this.startSize;
         this.sizeAnim = new Anim(this.startSize, this.finalSize, 5, 2);
+
+        this.color = [245, 0, 120, 255];
     }
 
     calculateSize(health) {
@@ -41,13 +43,15 @@ class Enemy {
         if (this.health > 0) {
             this.sizeAnim.markFinished();
             this.size = this.calculateSize(this.health);
+            this.triggerExplosion(50, 5, 10);
         } else {
-            this.death();
+            this.triggerExplosion(100, 10, 10);
+            gameModel.gameScore += this.score;
         }
     }
 
-    death() {
-        let explosion = new Explosion(this.position, 100, 10, 10, 0, 255, 255, 1);
+    triggerExplosion(force, count, startSize) {
+        let explosion = new Explosion(this.position, force, count, startSize, 0, this.color, this.color, 1);
         explosion.trigger();
     }
 
@@ -86,19 +90,19 @@ class Enemy {
 
 class EnemyBasic extends Enemy {
     constructor(position, playerPosition) {
-        super(1, position, playerPosition, 1, 0, 0, 0);
+        super(1, position, playerPosition, 1, 1, 0, 0);
     }
 }
 
 class EnemyMega extends Enemy {
     constructor(position, playerPosition) {
-        super(2, position, playerPosition, 1, 0, 0, 0)
+        super(2, position, playerPosition, 1, 2, 0, 0)
     }
 }
 
 class EnemyGiga extends Enemy {
     constructor(position, playerPosition) {
-        super(3, position, playerPosition, 1, 0, 0, 0)
+        super(3, position, playerPosition, 1, 3, 0, 0)
     }
 }
 
@@ -117,6 +121,10 @@ class EnemySeed {
         this.progressionPerSec = 50 / duration; 
 
         this.health = 1;
+
+        enemy.score += enemy.score;
+
+        this.color = enemy.color;
 
         let diff = rightMovement ? 50 : -50;
         this.movement = new Anim(progression, progression + diff, duration, 1);
