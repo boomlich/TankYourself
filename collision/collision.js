@@ -6,6 +6,10 @@ class Collision {
         this.height = height;
     }
 
+    // updatePosition(position) {
+    //     this.position = [position[0], position[1]];
+    // }
+
     checkCollision(objects) {
         for (const object of objects) {
             if (this.testCollision(object)) {

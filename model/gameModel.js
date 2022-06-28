@@ -143,7 +143,6 @@ class EntityManager {
 
     addParticle(particle) {
         this.particles.push(particle);
-        // console.log("PARTICLES: " + this.particles);
     }
 
     removeEnemySeed(enemySeed) {

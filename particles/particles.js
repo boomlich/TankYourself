@@ -1,46 +1,16 @@
-
-
-// class ParticleEmitter {
-//     constructor(shape, ttl, ttlVariation, minForceX, maxForceX, minForceY, maxForceY, initSize, endSize, sizeVariation, emitterCount, emitterTime) {
-//         this.shape = shape;
-//         this.timeToLive = ttl;
-//         this.timeToLiveVariation = ttlVariation;
-//         this.minForceX = minForceX;
-//         this.maxForceX = maxForceX;
-//         this.minForceY = minForceY;
-//         this.maxForceY = maxForceY;
-//         this.initSize = initSize;
-//         this.endSize = endSize;
-//         this.sizeVariation = sizeVariation;
-//         this.emitterCount = emitterCount;
-//         this.emitterTime = emitterTime;
-//     }
-
-//     update() {
-
-//     }
-
-//     spawnParticle() {
-
-//         let forceX = this.randomNumber(this.minForceX, this.maxForceX);
-//         let forceY = this.randomNumber(this.minForceY, this.maxForceY);
-
-
-//     }
-
-    
-// }
-
 class Particle {
 
-    constructor(spawn, forceX, forceY, startSize, endSize, startColor, endColor, animStyle) {
+    constructor(spawn, forceX, forceY, startSize, endSize, startColor, endColor, animStyle, totalDuration) {
         this.position = [spawn[0], spawn[1]];
         this.size = startSize;
         this.color = startColor;
         this.health = 1;
 
+        this.offsetX = 0;
+        this.offsetY = 0;
+
         this.currentDuration = 0;
-        this.totalDuration = 1;
+        this.totalDuration = totalDuration;
 
         this.positionXAnim = new Anim(spawn[0], forceX, this.totalDuration, animStyle);
         this.positionYAnim = new Anim(spawn[1], forceY, this.totalDuration, animStyle);
@@ -55,8 +25,8 @@ class Particle {
             this.health = 0;
         }
 
-        this.position[0] = this.getNewAnimValue(this.position[0], this.positionXAnim, deltaTime);
-        this.position[1] = this.getNewAnimValue(this.position[1], this.positionYAnim, deltaTime);
+        this.position[0] = this.getNewAnimValue(this.position[0], this.positionXAnim, deltaTime) + this.offsetX;
+        this.position[1] = this.getNewAnimValue(this.position[1], this.positionYAnim, deltaTime) + this.offsetY;
         this.size = this.getNewAnimValue(this.size, this.sizeAnim, deltaTime);
         this.color = this.getNewAnimValue(this.color, this.colorAnim, deltaTime);
 
@@ -73,7 +43,7 @@ class Particle {
 
 class Explosion {
 
-    constructor(position, force, amount, pStartSize, pEndSize, pStartColor, pEndColor) {
+    constructor(position, force, amount, pStartSize, pEndSize, pStartColor, pEndColor, duration) {
         this.position = [position[0], position[1]];
         this.forceX = force;
         this.forceY = force;
@@ -82,6 +52,7 @@ class Explosion {
         this.pEndSize = pEndSize;
         this.pStartColor = pStartColor;
         this.pEndColor = pEndColor;
+        this.duration = duration;
     }
 
     trigger() {
@@ -90,9 +61,7 @@ class Explosion {
             let pForceX = this.position[0] + randomNumber(-this.forceX, this.forceX);
             let pForceY = this.position[1] + randomNumber(-this.forceY, this.forceY);
 
-            console.log(pForceX);
-
-            gameModel.addParticle(new Particle(this.position, pForceX, pForceY, this.pStartSize, this.pEndSize, this.pStartColor, this.pEndColor, 3));
+            gameModel.addParticle(new Particle(this.position, pForceX, pForceY, this.pStartSize, this.pEndSize, this.pStartColor, this.pEndColor, 3, this.duration));
         }
     }
 

@@ -4,9 +4,9 @@ class Projectile {
         this.position = [position[0], position[1]];
         this.direction = direction;
         this.force = force;
-        this.collision = new Collision(this.position, this.size, this.size);
         this.health = damage;
         this.size = this.setSize(this.health);
+        this.collision = new Collision(this.position, this.size, this.size);
     }
 
     setSize(health) {
@@ -22,7 +22,8 @@ class Projectile {
     update(deltaTime) {
         this.position[0] += this.direction[0] * this.force * deltaTime;
         this.position[1] += this.direction[1] * this.force * deltaTime;
-
+        // this.collision.updatePosition([this.position[0] - this.collision.width / 2, this.position[1] - this.collision.height / 2]);
+        
         this.checkIfEdgeHit();
         this.checkIfEnemyHit();
     }
@@ -43,14 +44,17 @@ class Projectile {
     checkIfEdgeHit() {
         let edge = gameModel.edge;
 
-        if (this.position[0] < edge.minX) {
-            this.edgeHit(edge.minX, this.position[1], this.direction[1] < 0);
-        } else if (this.position[0] > edge.maxX) {
-            this.edgeHit(edge.maxX, this.position[1], this.direction[1] > 0);
-        } else if (this.position[1] < edge.minY) {
-            this.edgeHit(this.position[0], edge.minY, this.direction[0] > 0);
-        } else if (this.position[1] > edge.maxY) {
-            this.edgeHit(this.position[0], edge.maxY, this.direction[0] < 0);
+        let sizeDiff = this.size / 2;
+        let collisionSize = this.size * 1.25;
+
+        if (this.position[0] - collisionSize < edge.minX) {
+            this.edgeHit(edge.minX, this.position[1] - sizeDiff, this.direction[1] < 0);
+        } else if (this.position[0] + collisionSize > edge.maxX) {
+            this.edgeHit(edge.maxX, this.position[1] - sizeDiff, this.direction[1] > 0);
+        } else if (this.position[1] - collisionSize< edge.minY) {
+            this.edgeHit(this.position[0] - sizeDiff, edge.minY, this.direction[0] > 0);
+        } else if (this.position[1] + collisionSize > edge.maxY) {
+            this.edgeHit(this.position[0] - sizeDiff, edge.maxY, this.direction[0] < 0);
         }
     }
 
@@ -65,13 +69,19 @@ class Projectile {
             enemy = new EnemyGiga([0, 0], gameModel.playerPosition);
         }
 
+        let edgeProgression = gameModel.edge.pointToProgression(x, y);
+        let pointOnEdge = gameModel.edge.progressToPoint(edgeProgression);
+
+        let transititonTime = 1;
+        let particle = new Particle(this.position, pointOnEdge[0], pointOnEdge[1], this.size, 10, 255, 255, 4, transititonTime);
+        gameModel.addParticle(particle);
+
         this.applyDamage(this.health);
-        gameModel.addEnemySeed(new EnemySeed(enemy, gameModel.edge.pointToProgression(x, y), 3, rightMovement));
+        gameModel.addEnemySeed(new EnemySeed(enemy, edgeProgression, 3, rightMovement, particle, transititonTime));
     }
 
     applyDamage(damage) {
         this.health -= damage;
-
         this.size = this.setSize(this.health);
     }
 }

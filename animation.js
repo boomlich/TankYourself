@@ -32,6 +32,8 @@ class Anim {
             multiplier = easeOutElastic(this.currentProgress / this.differance);
         } else if (this.animCurve === 3) {
             multiplier = easeOutCirc(this.currentProgress / this.differance);
+        } else if (this.animCurve === 4) {
+            multiplier = easeOutQuint(this.currentProgress / this.differance);
         }
 
         this.value = this.start + this.differance * multiplier;

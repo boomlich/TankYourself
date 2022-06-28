@@ -47,7 +47,7 @@ class Enemy {
     }
 
     death() {
-        let explosion = new Explosion(this.position, 100, 10, 10, 0, 255, 255);
+        let explosion = new Explosion(this.position, 100, 10, 10, 0, 255, 255, 1);
         explosion.trigger();
     }
 
@@ -104,7 +104,7 @@ class EnemyGiga extends Enemy {
 
 class EnemySeed {
 
-    constructor(enemy, progression, duration, rightMovement) {
+    constructor(enemy, progression, duration, rightMovement, spawnParticle, delay) {
         this.enemy = enemy;
         this.startProgression = progression;
         this.currentProgression = 0;
@@ -112,6 +112,7 @@ class EnemySeed {
         this.totalDuration = duration;
         this.currentDuration = 0;
         this.position = gameModel.edge.progressToPoint(progression);
+        this.startPosition = [this.position[0], this.position[1]];
         this.right = false;
         this.progressionPerSec = 50 / duration; 
 
@@ -119,15 +120,32 @@ class EnemySeed {
 
         let diff = rightMovement ? 50 : -50;
         this.movement = new Anim(progression, progression + diff, duration, 1);
+
+        this.spawnParticle = spawnParticle;
+        this.delay = delay;
+        this.currentTime = 0;
     }
 
     update(deltaTime) {
+
+        if (this.currentTime < this.delay) {
+            this.spawnParticle.offsetX = this.position[0] - this.startPosition[0];
+            this.spawnParticle.offsetY = this.position[1] - this.startPosition[1];
+        }
+
+
         if (this.movement.update(deltaTime)) {
             let progression = mod(this.movement.value, 100);
             this.position = gameModel.edge.progressToPoint(progression);
         } else {
             this.spawnEnemy();
         }
+
+        this.currentTime += deltaTime;
+    }
+
+    delayFinished() {
+        return this.currentTime > this.delay;
     }
 
     spawnEnemy() {

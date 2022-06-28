@@ -55,3 +55,7 @@ function easeOutCirc(x) {
 function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+function easeOutQuint(x) {
+    return 1 - pow(1 - x, 5);
+}

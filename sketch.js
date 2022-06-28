@@ -50,6 +50,7 @@ function drawProjectiles() {
 
     for (const projectile of projectiles) {
         ellipse(projectile.position[0], projectile.position[1], projectile.size);
+        // rect(projectile.collision.position[0], projectile.collision.position[1], projectile.collision.width, projectile.collision.height);
     }
 }
 
@@ -70,12 +71,6 @@ function drawEdges() {
     stroke(255);
 }
 
-function drawStroke(x1, y1, x2, y2, color) {
-    fill(245, 0, 120)
-    line(x1, y1, x2, y2);
-    // stroke(color);
-}
-
 function drawParticles() {
     let particles = gameModel.entityManager.particles;
 
@@ -88,7 +83,9 @@ function drawEnemySeed() {
     let enemySeeds = gameModel.entityManager.enemySeeds;
 
     for (const seed of enemySeeds) {
-        ellipse(seed.position[0], seed.position[1], 10);
+        if (seed.delayFinished()) {
+            ellipse(seed.position[0], seed.position[1], 10);
+        }
     }
     
 }
