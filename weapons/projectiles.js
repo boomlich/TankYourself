@@ -36,10 +36,16 @@ class Projectile {
     checkIfEnemyHit() {
         let enemyHit = this.collision.checkCollision(gameModel.entityManager.enemies, this.getPosition());
         if (enemyHit != null) {
+            let impact = this.calculateImpactForce(this.position, enemyHit.position, this.force);
             let enemyHealth = enemyHit.health;
-            enemyHit.applyDamage(this.health);
+            enemyHit.applyDamage(this.health, impact);
             this.applyDamage(enemyHealth);
         }
+    }
+
+    calculateImpactForce(position, enemyPosition, force) {
+        let impactForce = unitVector(pointsToVector(position, enemyPosition));
+        return [impactForce[0] * force, impactForce[1] * force];
     }
 
     makeCopyWithDirection(direction) {

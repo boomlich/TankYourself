@@ -42,7 +42,7 @@ class PlayerCharacter {
         if (enemy != null) {
             this.applyDamage(enemy.health);
             enemy.score = 0;
-            enemy.applyDamage(enemy.health);
+            enemy.applyDamage(enemy.health, 1);
         }
     }
 

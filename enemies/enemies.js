@@ -37,13 +37,14 @@ class Enemy {
         this.velocity[1] += force[1];
     }
 
-    applyDamage(damage) {
+    applyDamage(damage, force) {
         this.health -= damage;
 
         if (this.health > 0) {
             this.sizeAnim.markFinished();
             this.size = this.calculateSize(this.health);
             this.triggerExplosion(50, 5, 10);
+            this.applyForce(force);
         } else {
             this.triggerExplosion(100, 10, 10);
             gameModel.gameScore += this.score;
