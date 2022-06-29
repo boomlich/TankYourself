@@ -13,6 +13,9 @@ class PlayerCharacter {
         this.collision = new Collision(this.position, this.size, this.size);
 
         this.health = health;
+
+        console.log("Collision:", this.collision.position);
+        console.log("col width:", this.collision.width, "height:", this.collision.height);
     }
 
     fireWeapon(direction, fireTime) {
@@ -38,6 +41,7 @@ class PlayerCharacter {
         let enemy = this.collision.checkCollision(gameModel.entityManager.enemies);
         if (enemy != null) {
             this.applyDamage(enemy.health);
+            enemy.score = 0;
             enemy.applyDamage(enemy.health);
         }
     }
@@ -46,7 +50,7 @@ class PlayerCharacter {
         this.health -= damage;
         console.log(this.health);
 
-        
+
 
         if (this.health < 1) {
             this.death();

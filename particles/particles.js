@@ -42,6 +42,10 @@ class Particle {
         this.currentDuration += deltaTime;
     }
 
+    getPosition() {
+        return [this.position[0] - this.size / 2, this.position[1] -this.size / 2];
+    }
+
     getNewAnimValue(original, animation, deltaTime) {
         if (animation.update(deltaTime)) {
             return animation.value;

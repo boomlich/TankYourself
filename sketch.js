@@ -26,10 +26,10 @@ function draw() {
 
     mouseDirection = unitVector([mouseX - width/2, mouseY - width/2]);
 
-
     textSize(20);
     // text(Math.round(gameModel.elapsedTime * 100) / 100, 25, 40);
     // text(Math.round(gameModel.fps * 1) / 1, width - 100, 40)
+    ellipseMode(CORNER);
 }
 
 
@@ -49,18 +49,16 @@ function drawProjectiles() {
 
     for (const projectile of projectiles) {
         fill(projectile.color);
-        ellipse(projectile.position[0], projectile.position[1], projectile.size);
+        ellipse(projectile.getPosition()[0], projectile.getPosition()[1], projectile.size);
     }
 }
 
 function drawEnemies() {
-
     let enemies = gameModel.entityManager.enemies;
 
-    // fill(245, 0, 120)
     for (const enemy of enemies) {
         fill(enemy.color);
-        ellipse(enemy.position[0], enemy.position[1], enemy.size);
+        ellipse(enemy.getPosition()[0], enemy.getPosition()[1], enemy.size);
     }
 }
 
@@ -70,7 +68,6 @@ function drawEdges() {
         line(lin[0], lin[1], lin[2], lin[3]);
     }
     noStroke();
-    // stroke(255);
 }
 
 function drawParticles() {
@@ -78,7 +75,7 @@ function drawParticles() {
     noStroke();
     for (const particle of particles) {
         fill(particle.color);
-        ellipse(particle.position[0], particle.position[1], particle.size);
+        ellipse(particle.getPosition()[0], particle.getPosition()[1], particle.size);
     }
 }
 
@@ -88,7 +85,7 @@ function drawEnemySeed() {
     for (const seed of enemySeeds) {
         if (seed.delayFinished()) {
             fill(seed.color);
-            ellipse(seed.position[0], seed.position[1], 10);
+            ellipse(seed.getPosition()[0], seed.getPosition()[1], seed.size);
         }
     }
 }

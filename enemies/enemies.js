@@ -14,7 +14,7 @@ class Enemy {
         this.startSize = 10;
         this.finalSize = this.calculateSize(this.health);
         
-        this.collision = new Collision(this.position, this.finalSize, this.finalSize);
+        this.collision = new Collision(this.getPosition(), this.finalSize, this.finalSize);
 
         this.size = this.startSize;
         this.sizeAnim = new Anim(this.startSize, this.finalSize, 5, 2);
@@ -48,6 +48,10 @@ class Enemy {
             this.triggerExplosion(100, 10, 10);
             gameModel.gameScore += this.score;
         }
+    }
+
+    getPosition() {
+        return [this.position[0] - this.size / 2, this.position[1] - this.size / 2];
     }
 
     triggerExplosion(force, count, startSize) {
@@ -84,7 +88,9 @@ class Enemy {
         this.velocity = limitVector(this.velocity, this.speed);
 
         this.position[0] += this.velocity[0];
-        this.position[1] += this.velocity[1];  
+        this.position[1] += this.velocity[1];
+
+        this.collision.updatePosition([this.position[0] - this.size / 2, this.position[1] - this.size / 2]);
     }
 }
 
@@ -122,6 +128,8 @@ class EnemySeed {
 
         this.health = 1;
 
+        this.size = 10;
+
         enemy.score += enemy.score;
 
         this.color = enemy.color;
@@ -150,6 +158,10 @@ class EnemySeed {
         }
 
         this.currentTime += deltaTime;
+    }
+
+    getPosition() {
+        return [this.position[0] - this.size / 2, this.position[1] - this.size / 2];
     }
 
     delayFinished() {

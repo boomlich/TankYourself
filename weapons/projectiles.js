@@ -1,11 +1,11 @@
 class Projectile {
 
     constructor(position, direction, force, damage) {
+        this.health = damage;
+        this.size = this.setSize(this.health);
         this.position = [position[0], position[1]];
         this.direction = direction;
         this.force = force;
-        this.health = damage;
-        this.size = this.setSize(this.health);
         this.collision = new Collision(this.position, this.size, this.size);
         this.trail = new Trail(this.position, 30, 1, this.size * 0.5, 0, [255, 255, 255, 255], [255, 255, 255, 255]);
         this.color = [0, 187, 255, 255];
@@ -25,6 +25,8 @@ class Projectile {
         this.position[0] += this.direction[0] * this.force * deltaTime;
         this.position[1] += this.direction[1] * this.force * deltaTime;
 
+        this.collision.updatePosition(this.getPosition());
+
         this.trail.update(deltaTime);
         
         this.checkIfEdgeHit();
@@ -32,7 +34,7 @@ class Projectile {
     }
 
     checkIfEnemyHit() {
-        let enemyHit = this.collision.checkCollision(gameModel.entityManager.enemies);
+        let enemyHit = this.collision.checkCollision(gameModel.entityManager.enemies, this.getPosition());
         if (enemyHit != null) {
             let enemyHealth = enemyHit.health;
             enemyHit.applyDamage(this.health);
@@ -59,6 +61,10 @@ class Projectile {
         } else if (this.position[1] + collisionSize > edge.maxY) {
             this.edgeHit(this.position[0] - sizeDiff, edge.maxY, this.direction[0] < 0);
         }
+    }
+
+    getPosition() {
+        return [this.position[0] - this.size / 2, this.position[1] - this.size / 2];
     }
 
     edgeHit(x, y, rightMovement) {

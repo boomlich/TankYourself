@@ -6,10 +6,6 @@ class Collision {
         this.height = height;
     }
 
-    // updatePosition(position) {
-    //     this.position = [position[0], position[1]];
-    // }
-
     checkCollision(objects) {
         for (const object of objects) {
             if (this.testCollision(object)) {
@@ -18,13 +14,17 @@ class Collision {
         }
     }
 
+    updatePosition(position) {
+        this.position = position;
+    }
+
     testCollision(target) {
-        let targetMinX = target.collision.position[0] - target.collision.width;
+        let targetMinX = target.collision.position[0];
         let targetMaxX = target.collision.position[0] + target.collision.width;
-        let targetMinY = target.collision.position[1] - target.collision.height;
+        let targetMinY = target.collision.position[1];
         let targetMaxY = target.collision.position[1] + target.collision.height;
 
-        return targetMinX < this.position[0] && targetMaxX > this.position[0] &&
-                targetMinY < this.position[1] && targetMaxY > this.position[1];
+        return targetMinX < this.position[0] + this.width && targetMaxX > this.position[0] &&
+                targetMinY < this.position[1] + this.height && targetMaxY > this.position[1];
     }
 }
