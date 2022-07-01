@@ -8,9 +8,11 @@ class GameModel {
 
     constructor(width, height) {
         this.entityManager = new EntityManager();
+        this.scoreManager = new ScoreManager();
         this.edge = new Edge(width, height, 10);
         this.playerPosition = [width / 2, height / 2];
         this.enemySpawnManager = new EnemySpawnManager(this, this.edge, this.playerPosition);
+        this.cam = new Camera();
         let d = new Date();
         this.prevTime = d.getTime();
         this.startGame();
@@ -18,24 +20,50 @@ class GameModel {
 
     startGame() {
         
-        addHUD();
-
-        this.playerCharacter = new PlayerCharacter(this.playerPosition, 1, 1, 1, 3);
+        this.player = new PlayerCharacter(this.playerPosition, 1, 1, 1, 3);
         this.gameActive = true;
         this.elapsedTime = 0;
-        this.gameScore = 0;
-        this.gameCoins = 0;
+        this.scoreManager.init();
 
-        addHealthDisplay(3);
-        addScoreContainer();
+        addHUD(this.player.health);
+    }
+
+
+
+    getPlayerHealth() {
+        if (this.player != null) {
+            return this.player.health;
+        }
+        return 0;
+    }
+
+    addHealth() {
+        this.player.health += 1;
     }
 
     playerFire(direction, fireTime) {
-        this.playerCharacter.fireWeapon(direction, fireTime);
+        this.player.fireWeapon(direction, fireTime);
     }
 
     addProjectile(projectile) {
         this.entityManager.addProjectile(projectile)
+    }
+
+    addCoin(coin) {
+        this.entityManager.addCoin(coin);
+    }
+
+    enemyDeath(enemy, projectileHit) {
+        if (projectileHit) {
+            this.scoreManager.addScore(enemy.score);
+        } else {
+            this.scoreManager.resetCombo();
+        }
+    }
+
+    pickupCoin(coin) {
+        this.scoreManager.addCoins(coin.value);
+        coin.destroy();
     }
 
     addEnemy(enemy) {
@@ -51,15 +79,51 @@ class GameModel {
         this.entityManager.addEnemySeed(enemySeed);
     }
 
+    pauseGame() {
+        if (this.gameActive) {
+            this.gameActive = false;
+            removeHUD();
+            addPauseMenu(this.formatDateTimer(this.elapsedTime));
+        } else {
+            this.prevTime = this.getNowTime();
+            this.gameActive = true;
+            removePauseMenu();
+            addHUD(this.player.health);
+        }
+    }
+
+    formatDateTimer(elapsedTime) {
+        let minutes = Math.floor(elapsedTime / 60);
+        let seconds = elapsedTime - minutes * 60;
+
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        } else {
+            minutes = Math.floor(minutes);
+        }
+        if (seconds < 10) {
+            seconds = "0" + Math.floor(seconds);
+        } else {
+            seconds = Math.floor(seconds);
+        }
+
+        return minutes + ":" + seconds;
+    }
+
     gameOver() {
+        // this.gameActive = false;
         console.log("GAME OVER");
+    }
+
+    getNowTime() {
+        let d = new Date()
+        return d.getTime();
     }
 
 
     update() {
         // Calculate time between frames
-        let d = new Date()
-        let nowTime = d.getTime();
+        let nowTime = this.getNowTime();
         deltaTime = (nowTime - this.prevTime) / 1000.0;
         this.prevTime = nowTime;
 
@@ -71,12 +135,16 @@ class GameModel {
 
             // update entities
             this.entityManager.update(deltaTime);
-            this.playerCharacter.update(deltaTime);
+            this.player.update(deltaTime);
             this.enemySpawnManager.update(deltaTime);
+            this.scoreManager.update(deltaTime);
 
-            HUD_score.innerHTML = this.gameScore;
-            HUD_coins.innerHTML = this.gameCoins;
-            updateHealthIcons(this.playerCharacter.health);
+            HUD_score.innerHTML = this.scoreManager.score;
+            HUD_coins.innerHTML = this.scoreManager.coins;
+            HUD_combo.innerHTML = this.scoreManager.getScoreComboString();
+
+            updateHealthIcons(this.player.health);
+            this.cam.update(deltaTime);
         }
     }
 }
@@ -84,10 +152,9 @@ class GameModel {
 class EnemySpawnManager {
     constructor(gameModel, edge, playerPosition) {
         this.enemySpawners = [
-            new EnemySpawner(new EnemyBasic([0, 0], playerPosition), 0.05, 0.20, 0, 200, gameModel, edge),
-            new EnemySpawner(new EnemyMega([0, 0], playerPosition), 0.01, 0.1, 50, 200, gameModel, edge),
-            new EnemySpawner(new EnemyGiga([0, 0], playerPosition), 0.005, 0.05, 100, 200, gameModel, edge),
-
+            new EnemySpawner(new EnemyBasic([0, 0], playerPosition), 0.1, 0.20, 0, 400, gameModel, edge),
+            new EnemySpawner(new EnemyMega([0, 0], playerPosition), 0.01, 0.1, 50, 400, gameModel, edge),
+            new EnemySpawner(new EnemyGiga([0, 0], playerPosition), 0.005, 0.05, 100, 400, gameModel, edge),
         ];
     }
 
@@ -141,6 +208,7 @@ class EntityManager {
         this.projectiles = [];
         this.particles = [];
         this.enemySeeds = []
+        this.coins = [];
     }
 
     addProjectile(projectile) {
@@ -158,6 +226,10 @@ class EntityManager {
     addParticle(particle) {
         this.particles.push(particle);
     }
+    
+    addCoin(coin) {
+        this.coins.push(coin);
+    }
 
     removeEnemySeed(enemySeed) {
         let index = this.enemySeeds.indexOf(enemySeed);
@@ -169,6 +241,7 @@ class EntityManager {
         this.enemies = this.updateKillable(this.enemies, deltaTime);
         this.enemySeeds = this.updateKillable(this.enemySeeds, deltaTime);
         this.particles = this.updateKillable(this.particles, deltaTime);
+        this.coins = this.updateKillable(this.coins, deltaTime);
     }
 
     updateKillable(array, deltaTime) {

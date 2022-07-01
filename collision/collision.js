@@ -14,6 +14,11 @@ class Collision {
         }
     }
 
+    setDimentions(width, height) {
+        this.width = width;
+        this.height = height;
+    }
+
     updatePosition(position) {
         this.position = position;
     }

@@ -3,20 +3,19 @@ class Enemy {
     acceleration = [0.0, 0.0];
     velocity = [0.0, 0.0]
 
-    constructor(health, position, target, speed, score, loot, lootchance) {
+    constructor(health, position, target, speed, score, lootchance) {
         this.health = health;
         this.speed = speed;
         this.position = [position[0], position[1]];
         this.target = [target[0], target[1]];
         this.score = score;
-        this.loot = loot;
         this.lootchance = lootchance;
         this.startSize = 10;
         this.finalSize = this.calculateSize(this.health);
-        
+        this.size = this.startSize;
         this.collision = new Collision(this.getPosition(), this.finalSize, this.finalSize);
 
-        this.size = this.startSize;
+        
         this.sizeAnim = new Anim(this.startSize, this.finalSize, 5, 2);
 
         this.color = [245, 0, 120, 255];
@@ -28,7 +27,7 @@ class Enemy {
         } else if (health == 2) {
             return 25;
         } else {
-            return 30
+            return 35;
         }
     }
 
@@ -37,17 +36,35 @@ class Enemy {
         this.velocity[1] += force[1];
     }
 
-    applyDamage(damage, force) {
+    applyDamage(damage, force, projectileHit) {
         this.health -= damage;
 
         if (this.health > 0) {
             this.sizeAnim.markFinished();
             this.size = this.calculateSize(this.health);
+            this.collision.width = this.size;
+            this.collision.height = this.size;
             this.triggerExplosion(50, 5, 10);
             this.applyForce(force);
         } else {
-            this.triggerExplosion(100, 10, 10);
-            gameModel.gameScore += this.score;
+            this.death(projectileHit);
+        }
+    }
+
+    death(projectileHit) {
+        this.triggerExplosion(100, 10, 10);
+        gameModel.enemyDeath(this, projectileHit);
+
+        if (projectileHit) {
+            this.randomCoinSpawn();
+        }
+    }
+
+    randomCoinSpawn() {
+        let roll = Math.random();
+
+        if (roll <= 0.5) {
+            gameModel.addCoin(new Coin(this.getPosition(), 10, [10, 255, 82, 255]));
         }
     }
 
@@ -97,19 +114,19 @@ class Enemy {
 
 class EnemyBasic extends Enemy {
     constructor(position, playerPosition) {
-        super(1, position, playerPosition, 1, 1, 0, 0);
+        super(1, position, playerPosition, 1, 1, 0.25);
     }
 }
 
 class EnemyMega extends Enemy {
     constructor(position, playerPosition) {
-        super(2, position, playerPosition, 1, 2, 0, 0)
+        super(2, position, playerPosition, 1, 2, 0.5)
     }
 }
 
 class EnemyGiga extends Enemy {
     constructor(position, playerPosition) {
-        super(3, position, playerPosition, 1, 3, 0, 0)
+        super(3, position, playerPosition, 1, 3, 0.75)
     }
 }
 
@@ -132,8 +149,7 @@ class EnemySeed {
         this.size = 10;
 
         enemy.score += enemy.score;
-
-        this.color = enemy.color;
+        this.color = spawnParticle.endColor;
 
         let diff = rightMovement ? 50 : -50;
         this.movement = new Anim(progression, progression + diff, duration, 1);
@@ -171,6 +187,8 @@ class EnemySeed {
 
     spawnEnemy() {
         this.health = 0;
-        gameModel.addEnemy(this.enemy.makeCopyAtPos(this.position));
+        let enemySpawn = this.enemy.makeCopyAtPos(this.position);
+        enemySpawn.color = this.color;
+        gameModel.addEnemy(enemySpawn);
     }
 }

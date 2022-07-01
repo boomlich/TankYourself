@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=block');
+
 html, body {
     margin: 0;
     padding: 0;
@@ -16,13 +18,13 @@ canvas {
     text-align: center;
     margin: 25px;
     user-select: none;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
 #HUD {
     position:absolute;
     width: 100%;
     height: 100%;
-    /* background-color: aquamarine; */
 }
 
 .ammoBasic {
@@ -44,7 +46,10 @@ canvas {
     height: 25px;
     width: 25px;
     margin-right: 5px;
-    background-color: white;
+    /* background-color: white; */
+    content: url("assets/heart_01.png");
+    /* box-shadow: 5px 5px 5px 5px #0ff; */
+    filter: drop-shadow(1px 1px 10px rgba(10, 255, 82, 0.75));
 }
 
 #scoreDisplay {
@@ -54,8 +59,150 @@ canvas {
 }
 
 .score {
+    font-weight: 700;
     color: white;
     text-align: right;
     right: 0px;
     margin-bottom: 5px;
+}
+
+#combo {
+    color: white;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 200px;
+    height: 50px;
+}
+
+#combo.pop {
+    animation: pop 0.3s linear 1;
+}
+
+@keyframes pop{
+    50%  {transform: scale(1.2);}
+}
+
+
+#ammoContainer {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    width: 50px;
+    height: 25px;
+    background-color: blue;
+}
+
+.weaponAmmo {
+
+}
+
+#pause {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.bPause {
+    border: none;
+    background: url("assets/TY_PauseButton_01.png");
+    background-size: cover;
+    width: 30px;
+    height: 30px;
+    opacity: 0.35;
+    transition-duration: 0.4s;
+}
+
+.bPause:hover {
+    opacity: 0.75;
+}
+
+
+
+
+  
+
+
+.inGameMenu {
+    display: inline-block;
+    margin-top: 50px;
+    width: 350px;
+    height: 350px;
+    background-color: rgba(189, 30, 210, 1);
+    border-radius: 10px;
+    filter: drop-shadow(1px 1px 10px rgba(189, 30, 210, 0.75));
+}
+
+.inGameMenuTitle {
+    font-weight: 900;
+    margin: 20px;
+    font-size: 30px;
+    color: white;
+}
+
+.inGameMenuButtonPanel {
+    width: 100%
+}
+
+.inGameMButton {
+    font-weight: 700;
+    font-size: 20px;
+
+    width: 150px;
+    height: 35px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.4s;
+    cursor: pointer;
+
+    background-color: rgb(52, 64, 90); 
+    color: white; 
+    border: 2px solid #29212e;
+
+    border-radius: 5px;
+
+}
+
+.inGameMButton:hover {
+    background-color: #88789c;
+    color: white;
+}
+
+
+#pauseMenuTimerPanel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+}
+
+#pauseTimer {
+    font-size: 25px;
+}
+
+#pauseMenuAudioPanel {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.pauseAudioText {
+    margin-left: 5px;
 }

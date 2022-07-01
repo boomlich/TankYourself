@@ -21,6 +21,7 @@ class Particle {
         this.colorAnimG = new Anim(startColor[1], endColor[1], totalDuration, animStyle);
         this.colorAnimB = new Anim(startColor[2], endColor[2], totalDuration, animStyle);
         this.colorAnimA = new Anim(startColor[3], endColor[3], totalDuration, animStyle);
+        this.endColor = endColor;
     }
 
     update(deltaTime) {

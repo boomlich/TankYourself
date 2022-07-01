@@ -30,7 +30,15 @@ class Projectile {
         this.trail.update(deltaTime);
         
         this.checkIfEdgeHit();
+        this.checkIfCoinHit();
         this.checkIfEnemyHit();
+    }
+
+    checkIfCoinHit() {
+        let coinHit = this.collision.checkCollision(gameModel.entityManager.coins, this.getPosition());
+        if (coinHit != null) {
+            gameModel.pickupCoin(coinHit);
+        }
     }
 
     checkIfEnemyHit() {
@@ -38,7 +46,7 @@ class Projectile {
         if (enemyHit != null) {
             let impact = this.calculateImpactForce(this.position, enemyHit.position, this.force);
             let enemyHealth = enemyHit.health;
-            enemyHit.applyDamage(this.health, impact);
+            enemyHit.applyDamage(this.health, impact, true);
             this.applyDamage(enemyHealth);
         }
     }
@@ -88,7 +96,7 @@ class Projectile {
         let pointOnEdge = gameModel.edge.progressToPoint(edgeProgression);
         let transititonTime = 1 + 0.5 * this.health;
         
-        let particle = new Particle(this.position, pointOnEdge[0], pointOnEdge[1], this.size, 10, this.color, enemy.color, 4, transititonTime);
+        let particle = new Particle(this.position, pointOnEdge[0], pointOnEdge[1], this.size, 10, this.color, [255, 92, 255, 255], 4, transititonTime);
         gameModel.addParticle(particle);
 
         this.applyDamage(this.health);

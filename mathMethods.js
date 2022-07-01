@@ -48,6 +48,11 @@ function easeOutElastic(x) {
       : pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1;
 }
 
+function roundToDecimal(num, decimal) {
+    let tenthPower = Math.pow(10, decimal);
+    return Math.round(num * tenthPower) / tenthPower;
+}
+
 function easeOutCirc(x) {
     return sqrt(1 - pow(x - 1, 2));
 }
@@ -58,4 +63,14 @@ function randomNumber(min, max) {
 
 function easeOutQuint(x) {
     return 1 - pow(1 - x, 5);
+}
+
+function vectorAngle(vector) {
+    let sinAngle = vector[1] / vectorLength(vector);
+
+    if (direction.getX() < 0) {
+        return Math.PI - Math.asin(sinAngle);
+    } else {
+        return Math.asin(sinAngle);
+    }
 }

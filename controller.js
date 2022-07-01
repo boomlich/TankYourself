@@ -7,12 +7,18 @@ function mousePressed(event) {
 
 function mouseReleased(event) {
 
-    if (gameModel.gameActive) {
+    if (event.path[0] === HUD) {
+        if (gameModel.gameActive) {
 
-        let d = new Date();
-        let currentTime = d.getTime();
-        let mousePressedTime = currentTime - timePressed;
-
-        gameModel.playerFire(mouseDirection, mousePressedTime);
+            let d = new Date();
+            let currentTime = d.getTime();
+            let mousePressedTime = currentTime - timePressed;
+    
+            gameModel.playerFire(mouseDirection, mousePressedTime);
+        }
     }
+}
+
+function pauseGame() {
+    gameModel.pauseGame();
 }

@@ -21,6 +21,7 @@ class Weapon {
             this.ammo -= 1;
             this.bulletCDs.push(0);
             removeAmmoIcon();
+            removePop();
         }
     }
 

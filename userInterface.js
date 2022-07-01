@@ -1,42 +1,119 @@
 
+let pauseMenu;
+
 let HUD;
 let HUD_healthContainer;
 let HUD_scoreContainer;
 let HUD_score;
 let HUD_coins;
+let HUD_ammoContainer
+let HUD_combo;
 
 let ammoIconBasicID = [];
 let healthIcons = [];
 
+function addAmmoDisplay() {
+    // HUD_ammoContainer = document.createElement("div");
+    // HUD_ammoContainer.id = "ammoDisplay";
+    // HUD.appendChild(HUD_ammoContainer);
+}
 
 function addAmmoIcon() {
-    let d = Date.now();
-    let ammoIcon = document.createElement("div");
-    ammoIcon.className = "ammoBasic";
-    ammoIcon.id = d;
-    HUD.appendChild(ammoIcon);
-    ammoIconBasicID.push(d);
+    // let d = Date.now();
+    // let ammoIcon = document.createElement("div");
+    // ammoIcon.className = "ammoBasic";
+    // ammoIcon.id = d;
+    // HUD.appendChild(ammoIcon);
+    // ammoIconBasicID.push(d);
 }
 
 function removeAmmoIcon() {
-    let elem = document.getElementById(ammoIconBasicID.pop());
-    elem.parentNode.removeChild(elem);
+    // let elem = document.getElementById(ammoIconBasicID.pop());
+    // elem.parentNode.removeChild(elem);
 }
 
-function addHUD() {
+function addPauseMenu(elapsedTime) {
+    pauseMenu = document.createElement("div");
+    HUD.id = "pauseMenu"
+    uiContainer.appendChild(pauseMenu);
+
+    pauseMenu.innerHTML = `
+    <div class = "inGameMenu">
+        <div class = "inGameMenuTitle"> Game paused</div>
+        <div class = "inGameMenuButtonPanel">
+            <button class = "button inGameMButton" onclick = "pauseGame()">Resume</button>
+            <button class = "button inGameMButton" onclick = "restartGame()">Restart</button>
+            <button class = "button inGameMButton" onclick = "options()">Options</button>
+            <button class = "button inGameMButton" onclick = "mainMenu()">Main menu</button>
+        </div>
+
+        <div id = "pauseMenuTimerPanel">
+            <div>Timer:</div>
+            <div id = "pauseTimer">02:53</div>
+        </div>
+
+        <div id = "pauseMenuAudioPanel">
+            <div class = "menuSliderPanel">
+                <div id = "pauseAudioText">SFX</div>
+                <input type="checkbox" id="sfx" name="sfx" value="sfx">
+                <input type="range" min="0" max="100" value="100" class="slider" id="sfxSlider">
+            </div>
+            <div class = "menuSliderPanel">
+                <div id = "pauseAudioText">Music</div>
+                <input type="checkbox" id="music" name="music" value="music">
+                <input type="range" min="0" max="100" value="100" class="slider" id="musicSlider">
+            </div>
+        </div>
+    </div>
+    `
+    let pauseTimer = document.getElementById("pauseTimer");
+    pauseTimer.innerHTML = elapsedTime;
+}
+
+function removePauseMenu() {
+    uiContainer.removeChild(pauseMenu);
+}
+
+function removeHUD() {
+    uiContainer.removeChild(HUD);
+    healthIcons = [];
+}
+
+function addHUD(health) {
     HUD = document.createElement("div");
     HUD.id = "HUD";
     uiContainer.appendChild(HUD);
-}
 
-function addHealthDisplay(health) {
-    HUD_healthContainer = document.createElement("div");
-    HUD_healthContainer.id = "healthDisplay"
-    HUD.appendChild(HUD_healthContainer);
+    HUD.innerHTML = `
+    <div id = "healthDisplay"></div>
 
-    for (let i = 0; i < health; i++) {
-        addHealthIcon();
-    }
+    <div id = "scoreContainer">
+        <div class = "score">
+            <div id = "scoreText" class = "score">0</div>
+        </div>
+        <div class = "score">
+            <div id = "coinText" class = "score">0</div>
+            <div class = "coinIcon"></div>
+        </div>
+    </div>
+
+    <div id = "ammoContainer">
+        <div class = "ammo"></div>
+        <div class = "ammo"></div>
+        <div class = "ammo"></div>
+    </div>
+
+    <div id = "pause">
+        <button class = "button bPause" onclick = "pauseGame()"></button>
+    </div>
+
+    <div id = "combo">23 x 1.25</div>
+    `;
+
+    HUD_healthContainer = document.getElementById("healthDisplay");
+    HUD_score = document.getElementById("scoreText");
+    HUD_coins = document.getElementById("coinText");
+    HUD_combo = document.getElementById("combo");
 }
 
 function addHealthIcon() {
@@ -63,18 +140,10 @@ function updateHealthIcons(health) {
     }
 }
 
-function addScoreContainer() {
-    HUD_scoreContainer = document.createElement("div");
-    HUD_scoreContainer.id = "scoreDisplay"
-    HUD.appendChild(HUD_scoreContainer);
-    
-    HUD_score = document.createElement("div");
-    HUD_score.className = "score";
-    HUD_score.innerHTML = "0";
-    HUD_scoreContainer.appendChild(HUD_score);
+function updateCombo(){
+    HUD_combo.classList.add("pop");
+}
 
-    HUD_coins = document.createElement("div");
-    HUD_coins.className = "score";
-    HUD_coins.innerHTML = "0";
-    HUD_scoreContainer.appendChild(HUD_coins);
+function removePop() {
+    HUD_combo.classList.remove("pop");
 }
