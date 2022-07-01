@@ -22,3 +22,8 @@ function mouseReleased(event) {
 function pauseGame() {
     gameModel.pauseGame();
 }
+
+function restartGame() {
+    removePauseMenu();
+    gameModel.startGame();
+}

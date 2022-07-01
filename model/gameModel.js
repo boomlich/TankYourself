@@ -19,7 +19,7 @@ class GameModel {
     }
 
     startGame() {
-        
+        this.entityManager.init();
         this.player = new PlayerCharacter(this.playerPosition, 1, 1, 1, 3);
         this.gameActive = true;
         this.elapsedTime = 0;
@@ -204,6 +204,10 @@ class EnemySpawner {
 class EntityManager {
 
     constructor() {
+        this.init();
+    }
+
+    init() {
         this.enemies = [];
         this.projectiles = [];
         this.particles = [];
@@ -231,10 +235,7 @@ class EntityManager {
         this.coins.push(coin);
     }
 
-    removeEnemySeed(enemySeed) {
-        let index = this.enemySeeds.indexOf(enemySeed);
-        this.enemySeeds.splice(index, 1);
-    }
+
 
     update(deltaTime) {
         this.projectiles = this.updateKillable(this.projectiles, deltaTime);
