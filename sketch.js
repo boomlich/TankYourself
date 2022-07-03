@@ -2,13 +2,33 @@ let gameModel;
 let edge;
 const uiContainer = document.getElementById("uiContainer");
 let angle = Math.PI / 4;
-// const HUD = document.getElementById("HUD");
 
-let img;
+let titleLogo;
 let mouseDirection;
 
+let sfx_oneUp;
+let sfx_coin;
+let sfx_button;
+let sfx_gameOverA;
+let sfx_gameOverB;
+let sfx_hurt;
+let sfx_playerFire;
+let sfx_enemyHit;
+let sfx_enemyDeath;
+let music_a;
+
 function preload() {
-    img = loadImage('assets/Tank_01.png');
+    titleLogo = loadImage('assets/graphics/TY_TitleLogo.png');
+    sfx_oneUp = new Audio("assets/audio/sfx_1up_01.wav");
+    sfx_coin = new Audio("assets/audio/sfx_coin_01.wav");
+    sfx_button = new Audio("assets/audio/sfx_button_01.wav");
+    sfx_gameOverA = new Audio("assets/audio/sfx_gameOver_01.wav");
+    sfx_gameOverB = new Audio("assets/audio/sfx_gameOver_02.wav");
+    sfx_hurt = new Audio("assets/audio/sfx_hurt_01.wav");
+    sfx_enemyHit = new Audio("assets/audio/sfx_enemyHit_01.mp3");
+    sfx_playerFire = new Audio("assets/audio/sfx_playerFire_01.mp3");
+    sfx_enemyDeath = new Audio("assets/audio/sfx_enemyDeath_01.wav");
+    music_a = new Audio("assets/audio/music_01.mp3");
 }
 
 
@@ -19,34 +39,31 @@ function setup() {
 }
   
 function draw() {
-
+    ellipseMode(CORNER);
     background(0, 2, 33);
     mouseDirection = unitVector([mouseX - width/2, mouseY - width/2]);
 
     gameModel.update();
     drawEdges();
-    drawPlayer();
-    drawEnemies();
-    drawCoins();
-    drawEnemySeed();
-    drawParticles();
-    drawProjectiles();
-
-    // image(img, 100, 100, 32, 32);
+    if (!gameModel.onMainMenu) {
+        drawPlayer();
+        drawEnemies();
+        drawCoins();
+        drawEnemySeed();
+        drawParticles();
+        drawProjectiles();
+    } else {
+        drawMenuText();
+        drawEnemies();
+        drawParticles();
+    }
     drawingContext.shadowBlur = 32;
-
-    // HUD_combo.classList.remove("pop");
-
-
-
-    textSize(20);
-
-    // text(gameModel.scoreManager.comboMultiplier, 20, 100);
-    // text(Math.round(gameModel.elapsedTime * 100) / 100, 25, 40);
-    // text(Math.round(gameModel.fps * 1) / 1, width - 100, 40)
-    ellipseMode(CORNER);
 }
 
+function drawMenuText() {
+    let title = gameModel.menuTitle;
+    image(title.image, title.renderPosition[0], title.renderPosition[1]);
+}
 
 function drawPlayer() {
 
@@ -101,7 +118,8 @@ function drawEnemies() {
 }
 
 function drawEdges() {
-    stroke(255);
+    stroke(245, 0, 120, 255);
+    drawingContext.shadowColor = color([245, 0, 120, 255]);
     for (const lin of edge.lines) {
         
         line(lin[0], lin[1], lin[2], lin[3]);
@@ -138,7 +156,8 @@ function drawCoins() {
         push();
         fill(coin.color);
         translate(coin.getPosition()[0] + coin.halfSize, coin.getPosition()[1] + coin.halfSize);
-        rotate(angle);
+        translate(0, 0);
+        rotate(angle + coin.rotation);
         rect(-coin.halfSize, -coin.halfSize, coin.size, coin.size);
         pop();
     }

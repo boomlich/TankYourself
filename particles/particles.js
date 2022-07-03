@@ -57,7 +57,7 @@ class Particle {
 
 class Explosion {
 
-    constructor(position, force, amount, pStartSize, pEndSize, pStartColor, pEndColor, duration) {
+    constructor(position, force, amount, pStartSize, pEndSize, pStartColor, pEndColor, duration, directional) {
         this.position = [position[0], position[1]];
         this.forceX = force;
         this.forceY = force;
@@ -67,20 +67,24 @@ class Explosion {
         this.pStartColor = pStartColor;
         this.pEndColor = pEndColor;
         this.duration = duration;
+        this.directional = directional;
     }
 
     trigger() {
         for (let i = 0; i < this.amount; i++) {
 
-            let pForceX = this.position[0] + randomNumber(-this.forceX, this.forceX);
-            let pForceY = this.position[1] + randomNumber(-this.forceY, this.forceY);
+            let pForceX;
+            let pForceY;
+            if (this.directional) {
+                pForceX = this.position[0] + randomNumber(0, this.forceX);
+                pForceY = this.position[1] + randomNumber(0, this.forceY);
+            } else {
+                pForceX = this.position[0] + randomNumber(-this.forceX, this.forceX);
+                pForceY = this.position[1] + randomNumber(-this.forceY, this.forceY);
+            }
 
             gameModel.addParticle(new Particle(this.position, pForceX, pForceY, this.pStartSize, this.pEndSize, this.pStartColor, this.pEndColor, 3, this.duration));
         }
-    }
-
-    calculateRandomForce(min, max) {
-        let force = randomNumber();
     }
 }
 

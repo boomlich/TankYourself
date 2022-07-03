@@ -56,8 +56,8 @@ class Projectile {
         return [impactForce[0] * force, impactForce[1] * force];
     }
 
-    makeCopyWithDirection(direction) {
-        return new Projectile(this.position, direction, this.force, this.health);
+    makeCopyWithDirection(direction, position) {
+        return new Projectile(position, direction, this.force, this.health);
     }
 
     checkIfEdgeHit() {
@@ -88,8 +88,6 @@ class Projectile {
             enemy = new EnemyBasic([0, 0], gameModel.playerPosition);
         } else if (this.health === 2) {
             enemy = new EnemyMega([0, 0], gameModel.playerPosition);
-        } else {
-            enemy = new EnemyGiga([0, 0], gameModel.playerPosition);
         }
 
         let edgeProgression = gameModel.edge.pointToProgression(x, y);
@@ -118,11 +116,5 @@ class BasicBullet extends Projectile {
 class MegaBullet extends Projectile {
     constructor(position, direction) {
         super(position, direction, 100, 2);
-    }
-}
-
-class GigaBullet extends Projectile {
-    constructor(position, direction) {
-        super(position, direction, 100, 3);
     }
 }

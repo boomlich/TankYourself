@@ -27,7 +27,7 @@ class ScoreManager {
         this.coins += coins;
         this.addCombo(coins);
 
-        if (this.coins % 20 == 0) {
+        if (this.coins % 15 == 0) {
             gameModel.addHealth();
         }
     }
@@ -56,8 +56,11 @@ class ScoreManager {
                 this.currentComboPoints += score;
             }
 
+            // Limit combo multiplier by the maximum allowed multiplier
+            if (this.comboMultiplier > this.comboMultiplierLimit) {
+                this.comboMultiplier = this.comboMultiplierLimit;
+            }
             updateCombo();
-
         }
         this.countdownTime = this.comboExpirationTime;
     }

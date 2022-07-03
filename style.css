@@ -19,6 +19,7 @@ canvas {
     margin: 25px;
     user-select: none;
     font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: white;
 }
 
 #HUD {
@@ -59,11 +60,28 @@ canvas {
 }
 
 .score {
+    display: flex;
     font-weight: 700;
     color: white;
+    right: 0;
+}
+
+.HUDscoreText {
     text-align: right;
-    right: 0px;
-    margin-bottom: 5px;
+    color: white;
+    font-weight: 700;
+}
+
+.diamond {
+    margin-top: 7px;
+    margin-right: 7px; 
+    border: none;
+    background: url("assets/TY_DiamondCoin_01.png");
+    background-size: cover;
+    width: 10px;
+    height: 10px;
+    filter: drop-shadow(1px 1px 10px rgba(10, 255, 82, 0.75));
+    /* margin: 0px; */
 }
 
 #combo {
@@ -76,6 +94,7 @@ canvas {
     right: 0;
     width: 200px;
     height: 50px;
+    font-weight: 700;
 }
 
 #combo.pop {
@@ -87,21 +106,50 @@ canvas {
 }
 
 
-#ammoContainer {
+#ammoPanel {
     position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 0px;
-    left: 0;
-    right: 0;
-    width: 50px;
-    height: 25px;
-    background-color: blue;
+    bottom: 0;
+    transform: translate(-50%, 0%);
+    /* vertical-align: bottom; */
+    display: inline-flex;
+    height: 16px;
 }
 
-.weaponAmmo {
-
+.ammoDisplay {
+    display: flex;
+    position: absolute; 
 }
+
+.ammoDisplay#primary {
+    right: 50%;
+    margin-right: 10px;
+}
+
+.ammoDisplay#secondary {
+    left: 50%;
+    margin-left: 10px;
+}
+
+.ammoDivider {
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.ammo {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    animation: pop-big 0.2s linear 1;
+}
+
+
+@keyframes pop-big {
+    50%  {transform: scale(2);}
+}
+
 
 #pause {
     position: absolute;
@@ -109,8 +157,15 @@ canvas {
     bottom: 0;
 }
 
+.button {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-weight: 900;
+}
+
 .bPause {
     border: none;
+    /* font-family: 'M PLUS Rounded 1c', sans-serif; */
+    font-weight: 900;
     background: url("assets/TY_PauseButton_01.png");
     background-size: cover;
     width: 30px;
@@ -131,13 +186,32 @@ canvas {
 
 .inGameMenu {
     display: inline-block;
-    margin-top: 50px;
     width: 350px;
     height: 350px;
-    background-color: rgba(189, 30, 210, 1);
+    background-color: rgb(245, 0, 120);
     border-radius: 10px;
-    filter: drop-shadow(1px 1px 10px rgba(189, 30, 210, 0.75));
+    filter: drop-shadow(1px 1px 10px rgb(245, 0, 120));
+
+    animation-duration: 0.5s;
+    animation-name: menuLoad;
+    animation-fill-mode: forwards;
+    opacity: 0;
 }
+
+.inGameMenu.delay {
+    animation-delay: 1s;
+}
+
+@keyframes menuLoad {
+    from {
+        margin-top: 100px;
+    }
+    to {
+        margin-top: 50px;
+        opacity: 1;
+    }
+}
+
 
 .inGameMenuTitle {
     font-weight: 900;
@@ -205,4 +279,74 @@ canvas {
 
 .pauseAudioText {
     margin-left: 5px;
+}
+
+#gameOverScorePanel {
+    font-weight: 900;
+    margin-top: -10px;
+}
+
+.gameOverScore {
+    font-size: 30px;
+}
+
+.gameOverScore.title {
+    font-size: 20px;
+}
+
+.gameOverSummaryTitle {
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.gameOverSummaryContainer {
+    margin-bottom: 5px;
+    width: 150px;
+    display: inline-block;
+}
+
+.gameOverSummaryContainer.left {
+    text-align: left;
+}
+
+.gameOverSummaryContainer.right {
+    text-align: right;
+}
+
+h6 {
+    font-size: 13px;
+    font-weight: 900;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#mainMenuPanel {
+    display: block;
+    animation-name: mainMenuLoad;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+
+@keyframes mainMenuLoad {
+    from {
+        margin-top: 275px;
+    }
+    to {
+        margin-top: 225px;
+        opacity: 1;
+    }
+}
+
+#mainMenuButtons {
+    width: 150px;
+    display: inline-block;
+}
+
+#credits {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
 }

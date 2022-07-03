@@ -4,12 +4,15 @@ class Collision {
         this.position = position;
         this.width = width;
         this.height = height;
+        this.enabled = true;
     }
 
     checkCollision(objects) {
         for (const object of objects) {
-            if (this.testCollision(object)) {
-                return object;
+            if (object.collision.enabled) {
+                if (this.testCollision(object)) {
+                    return object;
+                }
             }
         }
     }

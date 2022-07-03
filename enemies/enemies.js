@@ -45,7 +45,8 @@ class Enemy {
             this.collision.width = this.size;
             this.collision.height = this.size;
             this.triggerExplosion(50, 5, 10);
-            this.applyForce(force);
+            this.applyForce(force);   
+            playSFX(sfx_enemyHit);         
         } else {
             this.death(projectileHit);
         }
@@ -56,6 +57,7 @@ class Enemy {
         gameModel.enemyDeath(this, projectileHit);
 
         if (projectileHit) {
+            playSFX(sfx_enemyHit);
             this.randomCoinSpawn();
         }
     }

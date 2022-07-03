@@ -37,7 +37,6 @@ class Anim {
                 multiplier = easeOutQuint(this.currentProgress / this.differance);
             }
         }
-
     
         this.value = this.start + this.differance * multiplier;
         this.currentProgress += this.progressPerTime * deltaTime;
